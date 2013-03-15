@@ -1,0 +1,14 @@
+{
+  "title": "Forum component",
+  "description": "Stop een forum in je website.",
+  "type": "manual",
+  "dbUpdates": true,
+  "versions": [
+    {
+      "version": "1.0",
+      "date": "2013-03-15",
+      "description": "Eerste versie.",
+      "changes": []
+    }
+  ]
+}
