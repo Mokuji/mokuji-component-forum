@@ -5,8 +5,8 @@
   "dbUpdates": true,
   "versions": [
     {
-      "version": "1.0",
-      "date": "2013-03-15",
+      "version": "0.1",
+      "date": "2013-03-21",
       "description": "Eerste versie.",
       "changes": []
     }
