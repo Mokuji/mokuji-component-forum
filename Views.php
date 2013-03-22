@@ -35,8 +35,12 @@ class Views extends \dependencies\BaseViews
       tx('Url')->redirect('/admin/', true);
     }
     
+    //Get the breadcrumb-path.
+    $breadcrumbs = $this->module('path');
+    
     //Return template data.
     return array(
+      'breadcrumbs' => $breadcrumbs,
       'section' => $section
     );
     
