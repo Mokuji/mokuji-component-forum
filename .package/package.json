@@ -1,13 +1,13 @@
 {
   "title": "Forum component",
-  "description": "Stop een forum in je website.",
+  "description": "Pre-release versie van het forum-component. Bevat een aantal basis functies.",
   "type": "manual",
   "dbUpdates": true,
   "versions": [
     {
       "version": "0.1",
       "date": "2013-03-21",
-      "description": "Eerste versie.",
+      "description": "Pre-release.",
       "changes": []
     }
   ]

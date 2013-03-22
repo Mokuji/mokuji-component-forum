@@ -91,7 +91,7 @@ class DBUpdates extends \components\update\classes\BaseDBUpdates
       //     'title' => 'Forum component'
       //   ),
       //   array(
-          
+      //     'forum' => false
       //   )
       // ));
       
