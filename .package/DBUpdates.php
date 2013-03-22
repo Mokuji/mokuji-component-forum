@@ -96,11 +96,17 @@ class DBUpdates extends \components\update\classes\BaseDBUpdates
       // ));
       
       #TEMP: The following code can be replaced by the above code.
-      tx('Sql')
-      ->model('cms', 'Components')
-      ->set(array(
-        'name' => 'menu',
-        'title' => 'Menu component'
+      $c = tx('Sql')->model('cms', 'Components')->set(array(
+        'name' => 'forum',
+        'title' => 'Forum component'
+      ))->save();
+      tx('Sql')->model('cms', 'ComponentViews')->set(array(
+        'com_id' => $c->id,
+        'name' => 'forum',
+        'tk_title' => 'FORUM_VIEW_TITLE',
+        'tk_description' => 'FORUM_VIEW_DESCRIPTION',
+        'thumbnail' => 'NULL',
+        'is_config' => '0'
       ))
       ->save();
       
