@@ -33,7 +33,9 @@ class Modules extends \dependencies\BaseViews
     
     //Get the root node based on root forum ID.
     if($rfid->is_set()){
-      $root = $rfid;
+      $root = $this->table('Forums')
+      ->pk($rfid)
+      ->execute_single();
     }
     
     //Get the root node based on page ID.
@@ -70,8 +72,8 @@ class Modules extends \dependencies\BaseViews
         
         //Push the only node into the path array.
         $path->push(array(
-          'title' => $deepest->title,
-          'link' => url("?pid=KEEP&rfid=KEEP&fid={$deepest->id}", true)
+          'title' => $root->title,
+          'link' => url("?pid=KEEP&rfid=KEEP&fid={$root->id}", true)
         ));
         
       }
@@ -83,7 +85,7 @@ class Modules extends \dependencies\BaseViews
         //Get all nodes in between the root and the deepest.
         $between = $this->table('Forums')
         ->add_hierarchy()
-        ->parent_pk($root->id)
+        ->parent_pk(true, $root->id)
         ->where('lft', '<=', $deepest->lft)
         ->where('rgt', '>=', $deepest->rgt)
         ->execute();
