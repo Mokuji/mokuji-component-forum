@@ -74,3 +74,76 @@
   .image-upload-field .header{
     display:none;
   }
+
+/***
+** FORUM STYLE
+***/
+header h2 a{
+  color:#fff;
+}
+.topic-starter-topic header{
+  padding:15px;
+}
+.topic-starter-topic header{
+  background:#3e454d;
+  color:#fff;
+  border-top-left-radius:3px;
+  border-top-right-radius:3px;
+}
+  .forum-topic-reply header h2,
+  .forum-topic-reply header p,
+  .topic-starter-topic header p,
+  .topic-starter-topic header h1{
+    margin:0;
+    float:left;
+  }
+  .forum-topic-reply header h2,
+  .topic-starter-topic header h1{
+    width:80%;
+  }
+  .forum-topic-reply header p,
+  .topic-starter-topic header p{
+    width:20%;
+    text-align:right;
+  }
+.topic-starter-topic .topic-starter-content{
+  padding:15px;
+  background:#EDEDED;
+}
+.topic-starter-topic footer{
+  margin-bottom:10px;
+  background:#3e454d;
+  padding:15px 0;
+  color:#fff;
+  padding:15px;
+  border-bottom-left-radius:3px;
+  border-bottom-right-radius:3px;
+}
+.forum-topic-replies h1{
+  display:none;
+}
+  .forum-topic-reply{
+    margin-bottom:10px;
+  }
+    .forum-topic-reply header{
+      border-top-left-radius:3px;
+      border-top-right-radius:3px;
+    }
+    .forum-topic-reply footer{
+      border-bottom-left-radius:3px;
+      border-bottom-right-radius:3px;
+    }
+    .forum-topic-reply header,
+    .forum-topic-reply footer{
+      background:rgba(62,69,77,0.6);
+      color:#fff;
+      padding:10px 15px;
+    }
+      .forum-topic-reply h2{
+        font-size:14px;
+        line-height:1.75em;
+      }
+      .forum-reply-content{
+        padding:15px 15px;
+        background:#eee;
+      }
