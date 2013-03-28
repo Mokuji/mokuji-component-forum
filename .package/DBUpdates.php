@@ -69,7 +69,7 @@ class DBUpdates extends \components\update\classes\BaseDBUpdates
       CREATE TABLE `tx__forum_topics` (
         `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
         `forum_id` INT(10) UNSIGNED NOT NULL,
-        `post_id` INT(10) UNSIGNED NOT NULL,
+        `post_id` INT(10) UNSIGNED NULL,
         `user_id` INT(10) UNSIGNED NOT NULL,
         `title` VARCHAR(255) NOT NULL,
         `properties` SET('STICKY','HOT') NULL DEFAULT NULL,
