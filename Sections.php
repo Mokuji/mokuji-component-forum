@@ -76,17 +76,35 @@ class Sections extends \dependencies\BaseViews
     ->pk($topic->post_id)
     ->execute_single();
     
-    //Get replies.
-    $replies = $this->table('Posts')
-    ->where('topic_id', $tid)
-    ->where('id', '!', $topic->post_id)
-    ->execute();
-    
     //Return template data.
     return array(
       'topic' => $topic,
       'starter' => $starter,
-      'replies' => $replies
+      'replies' => $this->section('replies', array('tid' => $tid))
+    );
+    
+  }
+  
+  //Loads a list of replies to a topic.
+  public function replies($data)
+  {
+    
+    //Reference interesting variables.
+    $tid = $data->tid->otherwise(tx('Data')->get->tid);
+    
+    //Validate them.
+    $tid->validate('Topic ID', array('required', 'number'=>'int', 'gt'=>0));
+    
+    //Get replies.
+    $posts = $this->table('Posts', $P)
+    ->where('topic_id', $tid)
+    ->join('Topics', $T)
+    ->where("$T.post_id", '!', "`$P.id`")
+    ->execute();
+    
+    //Return template data.
+    return array(
+      'posts' => $posts
     );
     
   }

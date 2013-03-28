@@ -21,6 +21,12 @@ class Topics extends \dependencies\BaseModel
       'title' => array('required', 'string', 'no_html', 'between'=>array(0, 255))
     );
   
-  
+  //Generate a URL to this topic.
+  public function get_link()
+  {
+    
+    return url("?pid=KEEP&rfid=KEEP&fid=KEEP&tid=".$this->__get('id'), true);
+    
+  }
   
 }

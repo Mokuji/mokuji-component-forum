@@ -22,6 +22,12 @@ class Forums extends \dependencies\BaseModel
       'right' => 'rgt'
     );
   
-  
+  //Generate a URL to this forum.
+  public function get_link()
+  {
+    
+    return url("?pid=KEEP&rfid=KEEP&fid=".$this->__get('id'), true);
+    
+  }
   
 }
