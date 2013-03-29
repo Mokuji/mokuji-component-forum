@@ -1,3 +1,5 @@
+<?php echo load_plugin('bootstrap'); ?>
+
 <?php echo $data->breadcrumbs; ?>
 <section class="tx-forum">
   
