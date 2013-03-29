@@ -1,7 +1,7 @@
 <?php echo load_plugin('bootstrap'); ?>
 
 <?php echo $data->breadcrumbs; ?>
-<section class="tx-forum">
+<section class="tx-forum span12 alpha">
   
 <?php echo $data->section; ?>
 
