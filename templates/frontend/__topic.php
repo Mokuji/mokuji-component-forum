@@ -29,7 +29,7 @@
     </header>
     
     <div class="span12 alpha topic-starter-content">
-      <div class="span3 topic-starter-sidebar">
+      <div class="span3 topic-starter-sidebar hidden-phone">
         <div class="span12 sub-title">  
           <small>Subname</small>
         </div>

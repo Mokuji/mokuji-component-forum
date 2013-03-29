@@ -17,7 +17,7 @@
     </header>
     
     <div class="span12 alpha forum-reply-content">
-      <div class="span3 forum-reply-sidebar">
+      <div class="span3 forum-reply-sidebar hidden-phone">
         <div class="span12 sub-title">  
           <small>Subname</small>
         </div>
