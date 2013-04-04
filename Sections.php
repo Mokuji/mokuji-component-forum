@@ -56,55 +56,25 @@ class Sections extends \dependencies\BaseViews
     
   }
   
-  //Loads a list of posts based on a topic ID.
-  public function topic($data)
+  //Load a single reply, providing the data.
+  public function reply($data)
   {
     
-    //Reference interesting variables.
-    $tid = $data->tid->otherwise(tx('Data')->get->tid);
-    
-    //Validate them.
-    $tid->validate('Topic ID', array('required', 'number'=>'int', 'gt'=>0));
-    
-    //Get topic information.
-    $topic = $this->table('Topics')
-    ->pk($tid)
-    ->execute_single();
-    
-    //Get topic-starter.
-    $starter = $this->table('Posts')
-    ->pk($topic->post_id)
-    ->execute_single();
-    
-    //Return template data.
-    return array(
-      'topic' => $topic,
-      'starter' => $starter,
-      'replies' => $this->section('replies', array('tid' => $tid))
-    );
+    return $data;
     
   }
   
-  //Loads a list of replies to a topic.
-  public function replies($data)
+  //Load the reply template, but insert JQuery template tags.
+  public function reply_js($data)
   {
     
-    //Reference interesting variables.
-    $tid = $data->tid->otherwise(tx('Data')->get->tid);
-    
-    //Validate them.
-    $tid->validate('Topic ID', array('required', 'number'=>'int', 'gt'=>0));
-    
-    //Get replies.
-    $posts = $this->table('Posts', $P)
-    ->where('topic_id', $tid)
-    ->join('Topics', $T)
-    ->where("$T.post_id", '!', "`$P.id`")
-    ->execute();
-    
-    //Return template data.
     return array(
-      'posts' => $posts
+      'author' => array(
+        'username' => '${author.username}',
+        'subname' => '${author.subname}'
+      ),
+      'dt_created' => '${dt_created}',
+      'content' => '${content}'
     );
     
   }

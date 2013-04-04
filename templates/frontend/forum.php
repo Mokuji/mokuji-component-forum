@@ -1,11 +1,11 @@
 <?php echo load_plugin('bootstrap'); ?>
 
 <?php echo $data->breadcrumbs; ?>
-<section class="tx-forum row-fluid alpha">
-  
-<?php echo $data->section; ?>
 
-</section>
+<div class="tx-forum row-fluid alpha">
+<?php echo $data->section; ?>
+</div>
+
 <?php echo load_plugin('jquery_timeago'); ?>
 
 <script>
