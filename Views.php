@@ -16,22 +16,22 @@ class Views extends \dependencies\BaseViews
     
     //Load a topic based on topic-id?
     if($tid->is_set()){
-      $section = $this->view('topic');
+      $view = $this->view('topic');
     }
     
     //Load a forum based on forum-id?
     elseif($fid->is_set()){
-      $section = $this->section('forum');
+      $view = $this->view('topics');
     }
     
     //Load a list of forums based on page-id?
     elseif($pid->is_set()){
-      $section = $this->section('forum_page');
+      $view = $this->view('forum_page');
     }
     
     //Otherwise redirect to the administrators panel.
     else{
-      $section = null;
+      $view = null;
       tx('Url')->redirect('/admin/', true);
     }
     
@@ -41,7 +41,60 @@ class Views extends \dependencies\BaseViews
     //Return template data.
     return array(
       'breadcrumbs' => $breadcrumbs,
-      'section' => $section
+      'section' => $view
+    );
+    
+  }
+  
+  //Loads a list of forums based on a page ID.
+  public function forum_page()
+  {
+    
+    //Reference interesting variables.
+    $pid = tx('Data')->get->pid;
+    
+    //Validate them.
+    $pid->validate('Page ID', array('required', 'number'=>'int', 'gt'=>0));
+    
+    //Get forums associated with this page.
+    $forums = $this->table('Forums')
+    ->join('PageLink', $PL)
+    ->where("$PL.page_id", $pid)
+    ->execute();
+    
+    //Return template data.
+    return array(
+      'forums' => $forums
+    );
+    
+  }
+  
+  //Loads a list of topics and sub-forums based on a forum ID.
+  public function topics()
+  {
+    
+    //Reference interesting variables.
+    $fid = tx('Data')->get->fid;
+    
+    //Validate them.
+    $fid->validate('Forum ID', array('required', 'number'=>'int', 'gt'=>0));
+    
+    //Get sub-forums.
+    $subforums = $this->table('Forums')
+    ->parent_pk($fid)
+    ->add_relative_depth()
+    ->max_depth(1)
+    ->execute();
+    
+    //Get topics.
+    $topics = $this->table('Topics')
+    ->where('forum_id', $fid)
+    ->execute();
+    
+    //Return template data.
+    return array(
+      'subforums' => $subforums,
+      'topics' => $topics
     );
     
   }

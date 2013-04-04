@@ -1,9 +1,9 @@
 <!-- Topic-starter. -->
-<section class="topic-starter-topic">
+<section id="topic-starter" class="topic-starter-topic">
   
   <div class="topic-starter-header clearfix">
     <h1 class="topic-starter-title span7"><?php echo $data->topic->title; ?></h1>
-    <div class="pagination pull-right span5">
+    <div class="pagination pull-right">
       
       <ul>
         
@@ -24,16 +24,22 @@
       </ul>
       
     </div>
+    
+    <!-- #TODO: Make this button nice. -->
+    <div class="pull-right span1" style="margin-right:10px">
+      <a data-actions="focus-reply-form scroll-reply-form" class="btn pull-right" href="#reply-form">React</a>
+    </div>
+    
   </div>
   
   <div<?php if($data->show_starter->get('bool') !== true) echo ' hidden'; ?>>
-  <?php echo tx('Component')->sections('forum')->get_html('reply', $data->starter); ?>
+    <?php echo tx('Component')->sections('forum')->get_html('reply', $data->starter); ?>
   </div>
   
 </section>
 
 <!-- Replies. -->
-<section class="forum-topic-replies">
+<section id="replies" class="forum-topic-replies">
   
   <h1>Replies</h1>
   
@@ -44,4 +50,15 @@
 </section>
 
 <!-- Reply form. -->
-<!-- #TODO -->
+<section id="reply-form">
+  
+  <h1>Reply</h1>
+  
+  <form method="POST" action="<?php echo url('?action=forum/new_post'); ?>">
+    
+    <textarea name="content"></textarea>
+    <input name="submit" type="submit" />
+    
+  </form>
+  
+</section>
