@@ -92,7 +92,7 @@
       textarea: 'textarea-new-post',
       theme: {
         editor: '/themes/editor/epic-light.css',
-        preview: '/themes/bootstrap.min.css'
+        preview: '../../../../bootstrap/css/bootstrap.min.css'
       }
     });
     
