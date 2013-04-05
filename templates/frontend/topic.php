@@ -3,7 +3,7 @@
   
   <div class="topic-starter-header clearfix">
     <h1 class="topic-starter-title span7"><?php echo $data->topic->title; ?></h1>
-    <div class="pagination pull-right">
+    <div class="pagination pull-right" style="margin-left:10px">
       
       <ul>
         
@@ -26,13 +26,17 @@
     </div>
     
     <!-- #TODO: Make this button nice. -->
-    <div class="pull-right span1" style="margin-right:10px">
-      <a data-actions="focus-reply-form scroll-reply-form" class="btn pull-right" href="#reply-form">React</a>
+    <div class="pull-right span1">
+      <a data-actions="focus-reply-form scroll-reply-form" class="btn pull-right" href="#reply-form">
+        <!-- <label for="textarea-new-post" style="margin:auto"> -->
+          React
+        <!-- </label> -->
+      </a>
     </div>
     
   </div>
   
-  <div<?php if($data->show_starter->get('bool') !== true) echo ' hidden'; ?>>
+  <div<?php if(!$data->check('show_starter')) echo ' hidden'; ?>>
     <?php echo tx('Component')->sections('forum')->get_html('reply', $data->starter); ?>
   </div>
   

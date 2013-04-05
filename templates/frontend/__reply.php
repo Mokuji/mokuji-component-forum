@@ -16,7 +16,6 @@
     </header>
     
     <div class="span12 alpha forum-reply-content">
-      <!-- #TODO: Integrate the style attribute into the CSS. -->
       <div class="span2 forum-reply-sidebar hidden-phone">
         <div class="span12 sub-title">  
           <small>Subname</small>

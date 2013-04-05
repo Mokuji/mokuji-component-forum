@@ -110,6 +110,14 @@ class Modules extends \dependencies\BaseViews
       ));
     }
     
+    //Add additional data.
+    $i = 0; $total = $path->size();
+    $path->each(function($node)use(&$i, &$total){
+      $node->first = ($i === 0);
+      $i++;
+      $node->last = ($i === $total);
+    });
+    
     //Return template data.
     return array(
       'path' => $path
