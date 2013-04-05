@@ -52,23 +52,26 @@
 <!-- Reply form. -->
 <section id="reply-form" class="forum-topic-reply-form span12 alpha">
   
-  <form method="POST" action="<?php echo url('?action=forum/new_post'); ?>">
-  <fieldset class="span12 alpha">
-    <legend><h1>Reply</h1></legend>
-    
-    <div class="hidden-phone span2 alpha"></div>
-    
-    <div class="span10">
-      <div class="control-group">
-        <textarea rows="10" class="input-block-level" name="content" placeholder="Enter message here"></textarea>
+  <form method="POST" action="<?php echo url('?action=forum/new_post/post'); ?>">
+
+    <fieldset class="span12 alpha">
+
+      <legend><h1>Reply</h1></legend>
+      
+      <input type="hidden" name="topic_id" value="<?php echo $data->topic->id; ?>" />
+
+      <div class="hidden-phone span2 alpha"></div>
+      
+      <div class="span10">
+        <div class="control-group">
+          <textarea rows="10" class="input-block-level" name="content" placeholder="Enter message here"></textarea>
+        </div>
+        <div class="control-group button-set pull-right">
+          <!-- <button class="btn btn btn-link" id="btn-preview">Preview</button> -->
+          <input class="btn btn-inverse" name="submit" type="submit" value="Reply" />
+        </div>
       </div>
-      <div class="control-group button-set pull-right">
-        <button class="btn btn btn-link" id="btn-preview">Preview</button>
-        <input class="btn btn-inverse" name="submit" type="submit" value="Reply" />
-      </div>
-    </div>
-  </fieldset>
-  
+    </fieldset>
 
   </form>
   

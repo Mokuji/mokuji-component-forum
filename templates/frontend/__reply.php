@@ -10,7 +10,7 @@
         
         <div class="span10">
           <time pubdate datetime="<?php echo $data->dt_created; ?>">at one point</time>
-          <a class="btn btn-mini btn-submit pull-right">Quote</a>
+          <!-- <a class="btn btn-mini btn-submit pull-right">Quote</a> -->
         </div>
       <!-- </h2> -->
     </header>
@@ -26,7 +26,7 @@
         </a>
       </div>
       <div class="span10 forum-reply-message">
-        <?php echo $data->content; ?>
+        <?php echo nl2br($data->content->get()); ?>
       </div>
     </div>
     
