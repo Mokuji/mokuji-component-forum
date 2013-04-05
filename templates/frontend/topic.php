@@ -50,15 +50,26 @@
 </section>
 
 <!-- Reply form. -->
-<section id="reply-form">
-  
-  <h1>Reply</h1>
+<section id="reply-form" class="forum-topic-reply-form span12 alpha">
   
   <form method="POST" action="<?php echo url('?action=forum/new_post'); ?>">
+  <fieldset class="span12 alpha">
+    <legend><h1>Reply</h1></legend>
     
-    <textarea name="content"></textarea>
-    <input name="submit" type="submit" />
+    <div class="hidden-phone span2 alpha"></div>
     
+    <div class="span10">
+      <div class="control-group">
+        <textarea rows="10" class="input-block-level" name="content" placeholder="Enter message here"></textarea>
+      </div>
+      <div class="control-group button-set pull-right">
+        <button class="btn btn btn-link" id="btn-preview">Preview</button>
+        <input class="btn btn-inverse" name="submit" type="submit" value="Reply" />
+      </div>
+    </div>
+  </fieldset>
+  
+
   </form>
   
 </section>

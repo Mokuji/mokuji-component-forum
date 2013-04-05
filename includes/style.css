@@ -80,6 +80,12 @@
 ***/
 
 /* Author styling */
+.tx-forum{
+  padding:0 20px !important;
+  box-sizing:border-box;
+  -moz-box-sizing:border-box; /* Firefox */
+  -webkit-box-sizing:border-box; /* Safari */
+}
 .forum-topic-author,
 .forum-reply-author{
   font-weight:600;
@@ -119,10 +125,10 @@
   padding:15px 0;
 }
   .topic-starter-topic .signature{     
-    padding:5px 0;
+    border-top:1px solid rgba(0,0,0,0.1);
   }
     .topic-starter-topic .signature .inner{
-      border-top:1px solid rgba(0,0,0,0.1);
+      padding:5px 0;
     }
 .topic-starter-topic .forum-meta-footer{
   color:#fff;
@@ -146,8 +152,31 @@
         padding:15px 0;
       }
         .forum-topic-reply .signature{   
-          padding:5px 0;
+          border-top:1px solid rgba(0,0,0,0.1);
         }
           .forum-topic-reply .signature .inner{
-            border-top:1px solid rgba(0,0,0,0.1);
+            padding:5px 0;
           }
+
+/* Reply Form */
+.forum-topic-reply-form{
+    line-height:1.5em;
+    margin-bottom:10px;
+    border-radius:3px;
+    padding:15px;
+    background:rgba(0,0,0,0.15);
+  }
+  .forum-topic-reply-form legend{
+    border:none;
+  }
+    .forum-topic-reply-form legend h1{
+      margin:0;
+      line-height:1em;
+    }
+  .forum-topic-reply-form textarea{
+    height:auto;
+  }
+  .forum-topic-reply-form .button-set{
+    padding-top:10px;
+    margin:0;
+  }
