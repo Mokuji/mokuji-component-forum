@@ -78,14 +78,34 @@
 /***
 ** FORUM STYLE
 ***/
+.nolist{
+  list-style:none;
+  margin:0;
+  padding:0;
+}
 
-/* Author styling */
 .tx-forum{
   padding:0 20px !important;
   box-sizing:border-box;
   -moz-box-sizing:border-box; /* Firefox */
   -webkit-box-sizing:border-box; /* Safari */
 }
+
+/* Forum overview */
+.tx-forum .table-bordered tr{
+  background:rgba(255,255,255,0.5); 
+}
+.tx-forum .table-bordered thead tr{
+  background:rgba(0,0,0,0.03); 
+}
+  .tx-forum .table-bordered tbody tr:hover{
+  background:rgba(255,255,255,0.1); 
+}
+.tx-forum .pagination{
+  margin:0;
+  display:inline-block;
+}
+/* Author styling */
 .forum-topic-author,
 .forum-reply-author{
   font-weight:600;
