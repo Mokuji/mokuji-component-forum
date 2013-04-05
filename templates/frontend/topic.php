@@ -49,6 +49,8 @@
   
 </section>
 
+<?php if($data->check('show_reply')): ?>
+  
 <!-- Reply form. -->
 <section id="reply-form" class="forum-topic-reply-form span12 alpha">
   
@@ -64,7 +66,8 @@
       
       <div class="span10">
         <div class="control-group">
-          <textarea rows="10" class="input-block-level" name="content" placeholder="Enter message here"></textarea>
+          <textarea id="textarea-new-post" rows="10" class="input-block-level" name="content" placeholder="Enter message here" hidden></textarea>
+          <div id="epiceditor"></div>
         </div>
         <div class="control-group button-set pull-right">
           <!-- <button class="btn btn btn-link" id="btn-preview">Preview</button> -->
@@ -76,3 +79,23 @@
   </form>
   
 </section>
+
+<script>
+  (function(){
+    
+    //Create a new EpicEditor and pass the options.
+    var editor = new EpicEditor({
+      textarea: 'textarea-new-post',
+      theme: {
+        editor: '/themes/editor/epic-light.css',
+        preview: '/themes/bootstrap.min.css'
+      }
+    });
+    
+    //Place it in the DOM.
+    editor.load();
+    
+  })()
+</script>
+
+<?php endif; ?>

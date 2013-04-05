@@ -163,12 +163,17 @@ class Views extends \dependencies\BaseViews
       ));
     }
     
+    //Load required includes into the output buffer.
+    tx('Ob')->add(load_plugin('epiceditor'), 'script', 'epiceditor');
+    #TODO: Load script from includes. -- tx('Ob')->add('<script src=""></script>', 'script', 'topic');
+    
     //Return template data.
     return array(
       'topic' => $topic,
       'starter' => $starter,
       'replies' => $replies,
       'show_starter' => ($offset == 0),
+      'show_reply' => (tx('Account')->user->check('login') /*#TODO: && check_write_permission() */),
       'pager' => array(
         'pages' => $pages,
         'first_page' => ($page_number === 0),
