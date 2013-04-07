@@ -71,10 +71,23 @@ class Json extends \dependencies\BaseComponent
   }
   
   //Delete the given post.
-  public function delete_post($data, $parameters)
+  public function get_delete_post($data, $params)
   {
     
-    #TODO: Body for the "delete_post"-method.
+    //Check if the user is a moderator.
+    if(!tx('Account')->user->check('login') || tx('Account')->user->level->get() < 2){
+      throw new \exception\Authorisation("You can't delete a forum post when not logged in as an moderator.");
+    }
+    
+    #TODO: Authorise user delete permissions in the associated forum.
+
+    //Delete post.
+    return $this
+      ->table('Posts')->pk($params[0])
+      ->execute_single()
+      ->not('empty')->success(function($row){
+        $row->delete();
+      });
     
   }
   
@@ -113,5 +126,30 @@ class Json extends \dependencies\BaseComponent
     return Data($post->get())->merge($topic->get());
     
   }
-  
+
+  //Delete the given topic.
+  public function get_delete_topic($data, $params)
+  {
+    
+    //Check if the user is a moderator.
+    if(!tx('Account')->user->check('login') || tx('Account')->user->level->get() < 2){
+      throw new \exception\Authorisation("You can't delete a forum topic when not logged in as an moderator.");
+    }
+    
+    #TODO: Authorise user delete permissions in the associated forum.
+
+    //Get the topic.
+    $topic = $this
+      ->table('Topics')->pk($params[0])
+      ->execute_single();
+
+    //Delete topic.
+    $topic->not('empty')->success(function($row){
+      $row->delete();
+    });
+
+    //#TODO Check if the linked post is the first & only one, so we can delete it.
+
+  }
+
 }

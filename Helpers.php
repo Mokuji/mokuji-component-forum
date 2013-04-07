@@ -15,6 +15,16 @@ class Helpers extends \dependencies\BaseViews
     ->execute();
     
   }
+
+  //Get forum info.
+  public function get_forum($fid)
+  {
+
+    return $this->table('Forums', $F)
+    ->pk($fid)
+    ->execute_single();
+
+  }
   
   //Return the offset based on a page number.
   public function calc_offset($page_number, $per_page=null)

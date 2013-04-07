@@ -29,5 +29,24 @@ class Forums extends \dependencies\BaseModel
     return url("?pid=KEEP&rfid=KEEP&fid=".$this->__get('id'), true);
     
   }
+
+  //Get extra forum info.
+  public function get_extra()
+  {
+    
+    return array(
+      'last_post' => $this
+        ->table('Posts')
+        ->join('Topics', $T)
+        ->select("$T.title", 'topic_title')
+        ->where("$T.forum_id", $this->id)
+        ->order('dt_created', 'DESC')
+        ->limit(1)
+        ->execute_single(),
+      'num_topics' => 0,
+      'num_posts' => 0
+    );
+    
+  }
   
 }

@@ -10,13 +10,19 @@ class Views extends \dependencies\BaseViews
     #TODO: Claim account.
     
     //Reference interesting variables.
-    $pid = tx('Data')->get->pid;
-    $fid = tx('Data')->get->fid;
-    $tid = tx('Data')->get->tid;
+    $pid  = tx('Data')->get->pid;
+    $fid  = tx('Data')->get->fid;
+    $tid  = tx('Data')->get->tid;
+    $edit = tx('Data')->get->do == 'edit';
     
     //Load a topic based on topic-id?
     if($tid->is_set()){
       $view = $this->view('topic');
+    }
+    
+    //Load the create-a-new-topic view?
+    elseif($fid->is_set() && $edit){
+      $view = $this->view('topic_edit');
     }
     
     //Load a forum based on forum-id?
@@ -184,5 +190,26 @@ class Views extends \dependencies\BaseViews
     );
     
   }
-  
+ 
+  public function topic_edit($data)
+  {
+
+    //Reference interesting variables.
+    $pid = tx('Data')->get->pid;
+    $fid = tx('Data')->get->fid;
+    $tid = tx('Data')->get->tid;
+
+    //Validate.
+    $fid->validate('Forum ID', array('required', 'number'=>'int', 'gt'=>0));
+
+    //Load required includes into the output buffer.
+    tx('Ob')->add(load_plugin('epiceditor'), 'script', 'epiceditor');
+    #TODO: Load script from includes. -- tx('Ob')->add('<script src=""></script>', 'script', 'topic');
+
+    return array(
+      'forum' => $this->helper('get_forum', $fid)
+    );
+
+  }
+
 }

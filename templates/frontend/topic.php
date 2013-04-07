@@ -1,3 +1,16 @@
+<?php
+
+//Load plugins.
+echo load_plugin('jquery_rest');
+
+//Reference user, for easy access.
+$user = &tx('Account')->user;
+
+//Create an unique forum identifier.
+$form_id = 'form'.tx('Security')->random_string(10);
+
+?>
+
 <!-- Topic-starter. -->
 <section id="topic-starter" class="topic-starter-topic">
   
@@ -26,11 +39,16 @@
     </div>
     
     <!-- #TODO: Make this button nice. -->
-    <div class="pull-right span1">
+    <div class="pull-right">
+      
+      <?php if(tx('Account')->check_level(2)): ?>
+      <a data-topic-id="<?php echo $data->topic->id; ?>" class="btn-delete-topic btn pull-right">
+        <?php __('forum', 'Delete topic'); ?>
+      </a>
+      <?php endif; ?>
+
       <a data-actions="focus-reply-form scroll-reply-form" class="btn pull-right" href="#reply-form">
-        <!-- <label for="textarea-new-post" style="margin:auto"> -->
-          React
-        <!-- </label> -->
+        <?php __('forum', 'React'); ?>
       </a>
     </div>
     
@@ -45,7 +63,7 @@
 <!-- Replies. -->
 <section id="replies" class="forum-topic-replies">
   
-  <h1>Replies</h1>
+  <h1><?php __('forum', 'Replies'); ?></h1>
   
   <?php foreach($data->replies as $reply): ?>
   <?php echo tx('Component')->sections('forum')->get_html('reply', $reply); ?>
@@ -54,15 +72,15 @@
 </section>
 
 <?php if($data->check('show_reply')): ?>
-  
+
 <!-- Reply form. -->
 <section id="reply-form" class="forum-topic-reply-form span12 alpha">
   
-  <form method="POST" action="<?php echo url('?action=forum/new_post/post'); ?>">
+  <form method="POST" action="<?php echo url('?rest=forum/post'); ?>" id="<?php echo $form_id; ?>">
 
     <fieldset class="span12 alpha">
 
-      <legend><h1>Reply</h1></legend>
+      <legend><?php __('forum', 'Reply'); ?></legend>
       
       <input type="hidden" name="topic_id" value="<?php echo $data->topic->id; ?>" />
 
@@ -70,12 +88,12 @@
       
       <div class="span10">
         <div class="control-group">
-          <textarea id="textarea-new-post" rows="10" class="input-block-level" name="content" placeholder="Enter message here" hidden></textarea>
+          <textarea id="<?php echo $form_id; ?>-textarea-new-post" rows="10" class="input-block-level markdownarea" name="content" placeholder="Enter message here"></textarea>
           <div id="epiceditor"></div>
         </div>
         <div class="control-group button-set pull-right">
           <!-- <button class="btn btn btn-link" id="btn-preview">Preview</button> -->
-          <input class="btn btn-inverse" name="submit" type="submit" value="Reply" />
+          <input class="btn btn-inverse" name="submit" type="submit" value="<?php __('forum', 'Reply'); ?>" />
         </div>
       </div>
     </fieldset>
@@ -85,21 +103,73 @@
 </section>
 
 <script>
-  (function(){
+  $(function(){
     
     //Create a new EpicEditor and pass the options.
     var editor = new EpicEditor({
-      textarea: 'textarea-new-post',
+      textarea: '<?php echo $form_id; ?>-textarea-new-post',
       theme: {
         editor: '/themes/editor/epic-light.css',
         preview: '../../../../bootstrap/css/bootstrap.min.css'
-      }
+      },
+      clientSideStorage: false
     });
     
     //Place it in the DOM.
     editor.load();
+
+    window.onresize = function () {
+      editor.reflow();
+    }
     
-  })()
+  });
+
+  $(function(){
+    $('#reply-form form').restForm({
+      success: function(data){
+        document.location = "<?php echo url(''); ?>";
+      }
+    });
+  });
+
+  <?php if(tx('Account')->check_level(2)): ?>
+
+    //Delete topic.
+    $(function(){
+      $('.btn-delete-topic').on('click', function(e){
+
+        e.preventDefault();
+
+        if(confirm('Are you sure you want to delete this topic?')){
+          $.rest('GET', "<?php echo url('?rest=forum/delete_topic/',1); ?>"+$(e.target).data('topic-id'))
+            .done(function(result){
+              document.location = "<?php echo url('pid=KEEP&fid=KEEP',1); ?>";
+            });
+        }
+
+      });
+    });
+
+    //Delete post.
+    $(function(){
+      $('.btn-delete-post').on('click', function(e){
+
+        e.preventDefault();
+
+        var that = $(this);
+
+        if(confirm('Are you sure you want to delete this post?')){
+          $.rest('GET', "<?php echo url('?rest=forum/delete_post/',1); ?>"+$(e.target).data('post-id'))
+            .done(function(result){
+              $(that).closest('.forum-topic-reply').slideUp();
+            });
+        }
+
+      });
+    });
+
+  <?php endif; ?>
+
 </script>
 
 <?php endif; ?>

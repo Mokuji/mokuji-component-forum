@@ -28,5 +28,22 @@ class Topics extends \dependencies\BaseModel
     return url("?pid=KEEP&rfid=KEEP&fid=KEEP&tid=".$this->__get('id'), true);
     
   }
+
+  //Get extra topic info.
+  public function get_extra()
+  {
+    
+    $posts = $this
+      ->table('Posts')
+      ->where('topic_id', $this->id)
+      ->order('dt_created', 'DESC')
+      ->execute();
+
+    return array(
+      'last_post' => $posts->{0},
+      'num_posts' => ($posts->size()-1)
+    );
+    
+  }
   
 }
