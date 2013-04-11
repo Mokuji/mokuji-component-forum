@@ -16,7 +16,7 @@ $form_id = 'form'.tx('Security')->random_string(10);
   
   <div class="topic-starter-header clearfix">
     <h1 class="topic-starter-title span7"><?php echo $data->topic->title; ?></h1>
-    <div class="pagination pull-right" style="margin-left:10px">
+    <div class="pagination pagination-small pull-right" style="margin-left:10px">
       
       <ul>
         
@@ -42,12 +42,12 @@ $form_id = 'form'.tx('Security')->random_string(10);
     <div class="pull-right">
       
       <?php if(tx('Account')->check_level(2)): ?>
-      <a data-topic-id="<?php echo $data->topic->id; ?>" class="btn-delete-topic btn pull-right">
+      <a data-topic-id="<?php echo $data->topic->id; ?>" class="btn-delete-topic btn btn-small pull-right">
         <?php __('forum', 'Delete topic'); ?>
       </a>
       <?php endif; ?>
 
-      <a data-actions="focus-reply-form scroll-reply-form" class="btn pull-right" href="#reply-form">
+      <a data-actions="focus-reply-form scroll-reply-form" class="btn btn-small pull-right" href="#reply-form">
         <?php __('forum', 'React'); ?>
       </a>
     </div>

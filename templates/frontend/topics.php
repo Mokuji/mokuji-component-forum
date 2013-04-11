@@ -7,8 +7,8 @@
         <tr>
           <th>Forum</th>
           <th>Last post</th>
-          <th>Topics</th>
-          <th>Posts</th>
+          <!-- <th>Topics</th>
+          <th>Posts</th> -->
         </tr>
       </thead>
       <tfoot></tfoot>
@@ -42,7 +42,7 @@
 <div class="topic-starter-header clearfix">
 
   <div class="pull-right">
-    <a href="<?php echo url('do=edit'); ?>" class="btn pull-right">
+    <a href="<?php echo url('do=edit'); ?>" class="btn btn-small pull-right">
       <?php __('forum', 'New topic'); ?>
     </a>
   </div>

@@ -13,7 +13,7 @@
           <!-- <a class="btn btn-mini btn-submit pull-right">Quote</a> -->
 
           <?php if(tx('Account')->check_level(2)): ?>
-            <a data-post-id="<?php echo $data->id; ?>" class="btn-delete-post btn pull-right">
+            <a data-post-id="<?php echo $data->id; ?>" class="btn-delete-post btn btn-mini pull-right">
               <?php __('forum', 'Delete post'); ?>
             </a>
           <?php endif; ?>
