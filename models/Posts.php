@@ -37,7 +37,7 @@ class Posts extends \dependencies\BaseModel
     }
     
     //Do the query.
-    $author = tx('Sql')->table('account', 'Accounts')->pk($aid)->execute_single();
+    $author = tx('Sql')->table('community', 'UserProfiles')->where('user_id', $aid)->execute_single();
     
     //Cache the result.
     $this->authors[$aid] = $author;

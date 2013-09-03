@@ -45,5 +45,28 @@ class Topics extends \dependencies\BaseModel
     );
     
   }
+
+  //Return the Account object associated with the author of this post.
+  public function get_author()
+  {
+    
+    //Get the author ID.
+    $aid = $this->__get('user_id')->get('int');
+    
+    //Check the cache.
+    if(array_key_exists($aid, $this->authors)){
+      return $this->authors[$aid];
+    }
+    
+    //Do the query.
+    $author = tx('Sql')->table('community', 'UserProfiles')->where('user_id', $aid)->execute_single();
+    
+    //Cache the result.
+    $this->authors[$aid] = $author;
+    
+    //Return the result.
+    return $author;
+    
+  }
   
 }

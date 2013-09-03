@@ -10,3 +10,13 @@
   </ul>
   
 </section>
+
+<script type="text/javascript">
+
+$(function(){
+  
+  window.location = $('.forum-overview-item a').attr('href');
+  
+});
+
+</script>

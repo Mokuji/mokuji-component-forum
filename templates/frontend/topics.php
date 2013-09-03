@@ -19,8 +19,10 @@
             <a href="<?php echo $forum->link; ?>"><?php echo $forum->title; ?></a>
           </td>
           <td class="forum-lastpost">
+            <?php /*
             <a href="#"><?php echo $forum->extra->last_post->topic_title; ?></a><br />
             <small><time pubdate datetime="<?php echo $forum->extra->last_post->dt_created; ?>"><?php echo $forum->extra->last_post->dt_created; ?></time><!-- by <a class="lastpost-author" href="#"><?php echo $data->last_post->user_id; ?></a>--></small>
+            */ ?>
           </td>
           <!--
           <td class="forum-topics">
@@ -68,7 +70,7 @@
       <td class="forum-title">
         <!-- <div class="span7"> -->
           <a href="<?php echo $topic->link; ?>"><?php echo $topic->title; ?></a><br />
-          <small><time pubdate datetime="<?php echo $topic->dt_created; ?>"><?php echo $topic->dt_created; ?></time> by <a class="lastpost-author" href="#"><?php echo $topic->user_id; ?></a></small>
+          <small><time pubdate datetime="<?php echo $topic->dt_created; ?>"><?php echo $topic->dt_created; ?></time>, by <a class="lastpost-author" href="<?php echo url('?pid=63&menu=44&user='.$topic->author->account->id); ?>"><?php echo $topic->author->account->username; ?></a></small>
         <!-- </div> -->
         <!--
         <div class="pagination pagination-mini pagination-right pull-right hidden-phone">
@@ -85,10 +87,14 @@
       -->
       </td>
       <td class="forum-lastpost">
+        <?php /*
         <small><time pubdate datetime="<?php echo $topic->extra->last_post->dt_created; ?>"><?php echo $topic->extra->last_post->dt_created; ?></time> by <a class="lastpost-author" href="#"><?php echo $topic->extra->last_post->user_id; ?></a></small>
+        */ ?>
       </td>
       <td class="forum-replies">
-        <?php echo $topic->extra->num_posts; ?>
+        <?php
+        /*
+        echo $topic->extra->num_posts; */ ?>
       </td>
     </tr>
     <?php endforeach; ?>

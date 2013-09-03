@@ -25,7 +25,7 @@ class DBUpdates extends \components\update\classes\BaseDBUpdates
     
     //Create the forums table.
     tx('Sql')->query("
-      CREATE TABLE `tx__forum_forums` (
+      CREATE TABLE `#__forum_forums` (
         `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
         `lft` INT(10) NOT NULL,
         `rgt` INT(10) NOT NULL,
@@ -40,7 +40,7 @@ class DBUpdates extends \components\update\classes\BaseDBUpdates
     
     //Create the link table.
     tx('Sql')->query("
-      CREATE TABLE `tx__forum_forums_to_pages` (
+      CREATE TABLE `#__forum_forums_to_pages` (
         `forum_id` INT(10) UNSIGNED NOT NULL,
         `page_id` INT(10) UNSIGNED NOT NULL,
         PRIMARY KEY (`forum_id`, `page_id`)
@@ -51,7 +51,7 @@ class DBUpdates extends \components\update\classes\BaseDBUpdates
     
     //Create the posts table.
     tx('Sql')->query("
-      CREATE TABLE `tx__forum_posts` (
+      CREATE TABLE `#__forum_posts` (
         `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
         `topic_id` INT(10) UNSIGNED NOT NULL,
         `user_id` INT(10) UNSIGNED NOT NULL,
@@ -66,7 +66,7 @@ class DBUpdates extends \components\update\classes\BaseDBUpdates
     
     //Create the topics table.
     tx('Sql')->query("
-      CREATE TABLE `tx__forum_topics` (
+      CREATE TABLE `#__forum_topics` (
         `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
         `forum_id` INT(10) UNSIGNED NOT NULL,
         `post_id` INT(10) UNSIGNED NULL,
