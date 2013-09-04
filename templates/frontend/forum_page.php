@@ -15,7 +15,7 @@
 
 $(function(){
   
-  window.location = $('.forum-overview-item a').attr('href');
+  // window.location = $('.forum-overview-item a').attr('href');
   
 });
 

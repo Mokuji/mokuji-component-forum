@@ -151,5 +151,183 @@ class Json extends \dependencies\BaseComponent
     //#TODO Check if the linked post is the first & only one, so we can delete it.
 
   }
-
+  
+  /**
+   * Gets forum information based on the page ID.
+   * @return \components\forum\models\Forums
+   */
+  protected function get_page_forum($data, $params)
+  {
+    
+    return mk('Sql')
+      ->table('forum', 'Forums')
+      ->join('PageLink', $PL)
+      ->where("$PL.page_id", $params->{0})
+      ->execute_single()
+      
+      ->is('empty', function()use($data, $params){
+        
+        if($data->allow_create->validate('Allow create', array('boolean'))->is_true()){
+          
+          $forum = mk('Sql')
+            ->model('forum', 'Forums')
+            ->merge(array(
+              'title' => 'New forum'
+            ))
+            ->hsave();
+          
+          mk('Sql')
+            ->model('forum', 'PageLink')
+            ->merge(array(
+              'forum_id' => $forum->id,
+              'page_id' => $params->{0}
+            ))
+            ->save();
+          
+          return $forum;
+          
+        }
+        
+        else
+          throw new \exception\NotFound('No forum associated with page ID "%s"', $params->{0});
+        
+      })
+      
+      //Include custom getters.
+      ->is('set', function($forum)use($data){
+        
+        $subfora = $data->include_subfora->validate('Include subfora', array('boolean'))->is_true();
+        $extras = $data->include_extras->validate('Include extras', array('boolean'))->is_true();
+        $link = $data->include_link->validate('Include link', array('boolean'))->is_true();
+        
+        // $go = function(){};
+        $go = function($forum)use($subfora, $extras, $link, &$go){
+          
+          if($extras) $forum->extra;
+          if($link)   $forum->link;
+          
+          if($subfora){
+            $forum->subfora->each($go);
+          }
+          
+        };
+        
+        $go($forum);
+        
+      })
+    ;
+    
+  }
+  
+  public function create_forum($data, $params)
+  {
+    
+    return mk('Sql')
+      ->model('forum', 'Forums')
+      ->merge($data->having('title', 'description'))
+      ->hsave($data->parent_forum_id, 0)
+      ->is(true, function($forum){
+        $forum->extra;
+        $forum->link;
+      });
+    
+  }
+  
+  public function update_forum($data, $params)
+  {
+    
+    return mk('Sql')
+      ->table('forum', 'Forums')
+      ->pk($params->{0})
+      ->execute_single()
+      ->is('empty', function()use($data){
+        throw new \exception\NotFound('The forum with ID %s was not found', $data->id);
+      })
+      ->merge($data->having('title', 'description'))
+      ->save();
+    
+  }
+  
+  public function delete_forum($data, $params)
+  {
+    
+    return mk('Sql')
+      ->table('forum', 'Forums')
+      ->pk($params->{0})
+      ->execute_single()
+      ->is('empty', function()use($data){
+        throw new \exception\NotFound('The forum with ID %s was not found', $data->id);
+      })
+      ->hdelete();
+    
+  }
+  
+  public function update_page_forum($data, $params)
+  {
+    
+    //Update forum information.
+    $forum = mk('Sql')
+      ->table('forum', 'Forums')
+      ->pk($data->id)
+      ->execute_single()
+      ->is('empty', function()use($data){
+        throw new \exception\NotFound('The forum with ID %s was not found', $data->id);
+      })
+      ->merge($data->having('title', 'description'))
+      ->save();
+    
+    //Update page association.
+    mk('Sql')
+      ->table('forum', 'PageLink')
+      ->where('page_id', $data->page_id)
+      ->execute_single()
+      ->is('empty', function(){
+        return mk('Sql')
+          ->model('forum', 'PageLink');
+      })
+      ->merge(array(
+        'page_id' => $data->page_id,
+        'forum_id' => $forum->id
+      ))
+      ->save();
+    
+    //Update subfora ordering and nesting.
+    $order = $data->subfora->as_array();
+    
+    #TODO: Can be more efficient, (7 queries per subforum a.t.m.)
+    #TODO: USE SQL TRANSACTION HERE!
+    
+    //Loop in reversed order.
+    //By prepending the items, this will create the right order.
+    for($i = count($order)-1; $i >= 0; $i--)
+    {
+      
+      $item = $order[$i];
+      
+      $target = mk('Sql')
+        ->table('forum', 'Forums')
+        ->pk($item['item_id'])
+        ->execute_single()
+        ->is('empty', function()use($item){
+          throw new \exception\NotFound('The subforum with ID %s was not found', $item['item_id']);
+        })
+        ->hsave($item['parent_id'] == 'root' ? $forum->id : $item['parent_id']);
+      
+    }
+    
+    return $forum->is(true, function($forum){
+        
+        //Loops through all subfora to include subfora, extras and links.
+        $go = function($forum)use(&$go){
+          $forum->extra;
+          $forum->link;
+          $forum->subfora->each($go);
+        };
+        
+        $go($forum);
+        
+      });
+    
+  }
+  
 }

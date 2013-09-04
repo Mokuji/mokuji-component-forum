@@ -4,13 +4,13 @@ class Views extends \dependencies\BaseViews
 {
   
   //Loads a forum.
-  public function forum()
+  public function forum($options)
   {
     
     #TODO: Claim account.
     
     //Reference interesting variables.
-    $pid  = tx('Data')->get->pid;
+    $pid  = $options->pid->value->otherwise(tx('Data')->get->pid);
     $fid  = tx('Data')->get->fid;
     $tid  = tx('Data')->get->tid;
     $edit = tx('Data')->get->do == 'edit';
@@ -32,7 +32,7 @@ class Views extends \dependencies\BaseViews
     
     //Load a list of forums based on page-id?
     elseif($pid->is_set()){
-      $view = $this->view('forum_page');
+      $view = $this->view('forum_page', array('pid'=>array('key'=>'pid', 'value'=>$pid->get())));
     }
     
     //Otherwise redirect to the administrators panel.
@@ -53,11 +53,11 @@ class Views extends \dependencies\BaseViews
   }
   
   //Loads a list of forums based on a page ID.
-  public function forum_page()
+  public function forum_page($options)
   {
     
     //Reference interesting variables.
-    $pid = tx('Data')->get->pid;
+    $pid = $options->pid->value->otherwise(tx('Data')->get->pid);
     
     //Validate them.
     $pid->validate('Page ID', array('required', 'number'=>'int', 'gt'=>0));
@@ -140,6 +140,7 @@ class Views extends \dependencies\BaseViews
     //Calculate total pages.
     $total_pages = $this->helper('calc_pagecount', $num_replies);
     $last_page = ($total_pages-1);
+    $new_page_on_reply = $this->helper('calc_pagecount', $num_replies->get('int')+1) > $total_pages;
     
     //Get pages.
     // $P = '`#__forum_posts`';
@@ -184,8 +185,10 @@ class Views extends \dependencies\BaseViews
         'pages' => $pages,
         'first_page' => ($page_number === 0),
         'last_page' => ($page_number === $last_page),
+        'new_page_on_reply' => $new_page_on_reply,
         'link_first' => url("?page_number=0"),
-        'link_last' => url("?page_number=$last_page")
+        'link_last' => url("?page_number=$last_page"),
+        'link_after_reply' => url("?page_number=".($new_page_on_reply ? $last_page+1 : $last_page))
       )
     );
     

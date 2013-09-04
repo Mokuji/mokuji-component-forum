@@ -7,23 +7,28 @@ class Helpers extends \dependencies\BaseViews
   public function get_replies($tid, $offset=0, $per_page=null)
   {
     
-    return $this->table('Posts', $P)
-    ->where('topic_id', $tid)
-    ->join('Topics', $T)
-    ->where("$T.post_id", '!', "`$P.id`")
-    ->limit($this->_per_page($per_page), $offset)
-    ->execute();
+    $resultset = $this->table('Posts', $P)
+      ->where('topic_id', $tid)
+      ->join('Topics', $T)
+      ->where("$T.post_id", '!', "`$P.id`")
+      ->order('dt_created')
+      ->limit($this->_per_page($per_page), $offset)
+      ->execute();
+    
+    $resultset->idx($resultset->size()-1)->merge(array('is_latest' => true));
+    
+    return $resultset;
     
   }
 
   //Get forum info.
   public function get_forum($fid)
   {
-
+    
     return $this->table('Forums', $F)
     ->pk($fid)
     ->execute_single();
-
+    
   }
   
   //Return the offset based on a page number.

@@ -69,4 +69,21 @@ class Topics extends \dependencies\BaseModel
     
   }
   
+  public function delete()
+  {
+    
+    //First delete all posts.
+    mk('Sql')
+      ->table('forum', 'Posts')
+      ->where('topic_id', $this->id)
+      ->execute()
+      ->each(function($post){
+        $post->delete();
+      });
+    
+    //Now delete the thread.
+    parent::delete();
+    
+  }
+  
 }

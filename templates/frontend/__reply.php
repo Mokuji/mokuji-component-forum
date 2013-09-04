@@ -1,5 +1,9 @@
   <article class="forum-topic-reply clearfix" id="forum-reply-<?php echo $data->id; ?>">
     
+    <?php if($data->check('is_latest')): ?>
+      <a href="#" id="latest"></a>
+    <?php endif; ?>
+    
     <header class="clearfix">
       <!-- #TODO: Integrate the style attribute into the CSS. -->
       <!-- <h2 style="font-size:1em;margin:auto;padding:auto"> -->

@@ -9,14 +9,9 @@ $user = &tx('Account')->user;
 //Create an unique forum identifier.
 $form_id = 'form'.tx('Security')->random_string(10);
 
-?>
-
-<!-- Topic-starter. -->
-<section id="topic-starter" class="topic-starter-topic">
-  
-  <div class="topic-starter-header clearfix">
-    <h1 class="topic-starter-title span7"><?php echo $data->topic->title; ?></h1>
-    <div class="pagination pagination-small pull-right" style="margin-left:10px">
+$pagination = function()use($data){
+  ?>
+    <div class="pagination pagination-small">
       
       <ul>
         
@@ -37,9 +32,20 @@ $form_id = 'form'.tx('Security')->random_string(10);
       </ul>
       
     </div>
+  <?php
+};
+
+?>
+
+<!-- Topic-starter. -->
+<section id="topic-starter" class="topic-starter-topic">
+  
+  <div class="topic-starter-header clearfix">
+    <h1 class="topic-starter-title span7"><?php echo $data->topic->title; ?></h1>
+    <?php $pagination(); ?>
     
     <!-- #TODO: Make this button nice. -->
-    <div class="pull-right">
+    <div class="topic-operations">
       
       <?php if(tx('Account')->check_level(2)): ?>
       <a data-topic-id="<?php echo $data->topic->id; ?>" class="btn-delete-topic btn btn-small pull-right">
@@ -48,7 +54,7 @@ $form_id = 'form'.tx('Security')->random_string(10);
       <?php endif; ?>
 
       <a data-actions="focus-reply-form scroll-reply-form" class="btn btn-small pull-right" href="#reply-form">
-        <?php __('forum', 'React'); ?>
+        <?php __('forum', 'Reply'); ?>
       </a>
     </div>
     
@@ -71,6 +77,10 @@ $form_id = 'form'.tx('Security')->random_string(10);
   
 </section>
 
+<section id="footer-pagination">
+  <?php $pagination(); ?>
+</section>
+
 <?php if($data->check('show_reply')): ?>
 
 <!-- Reply form. -->
@@ -83,8 +93,6 @@ $form_id = 'form'.tx('Security')->random_string(10);
       <legend><?php __('forum', 'Reply'); ?></legend>
       
       <input type="hidden" name="topic_id" value="<?php echo $data->topic->id; ?>" />
-
-      <div class="hidden-phone span2 alpha"></div>
       
       <div class="span10">
         <div class="control-group">
@@ -108,28 +116,51 @@ $form_id = 'form'.tx('Security')->random_string(10);
     //Create a new EpicEditor and pass the options.
     var editor = new EpicEditor({
       textarea: '<?php echo $form_id; ?>-textarea-new-post',
+      localStorageName: 'forum_topic_reply_drafts_epiceditor',
+      file:{
+        name: 'topic_<?php echo $data->topic->id; ?>',
+        autosave: 1000
+      },
       theme: {
         editor: '/themes/editor/epic-light.css',
         preview: '../../../../bootstrap/css/bootstrap.min.css'
       },
-      clientSideStorage: false
+      button: {
+        fullscreen: false
+      }
     });
     
     //Place it in the DOM.
-    editor.load();
-
+    editor.load(function(){
+      
+      //Now that we are sure there were no javascript errors, hide the textarea.
+      $('#<?php echo $form_id; ?>-textarea-new-post').hide();
+      
+      //Enable CTRL + Enter submitting
+      $(editor.getElement('editor')).on('keyup', function(e){
+        if(e.ctrlKey === true && e.keyCode === 13)
+          $('#reply-form form').trigger('submit');
+      });
+      
+    });
+    
     window.onresize = function () {
       editor.reflow();
     }
     
-  });
-
-  $(function(){
     $('#reply-form form').restForm({
       success: function(data){
-        document.location = "<?php echo url(''); ?>";
+        editor.remove('topic_<?php echo $data->topic->id; ?>');
+        
+        var loadLastPostUrl = "<?php echo $data->pager->link_after_reply; ?>";
+        
+        document.location = loadLastPostUrl+'#latest';
+        if(document.location == loadLastPostUrl || loadLastPostUrl+'#latest')
+          document.location.reload();
+        
       }
     });
+    
   });
 
   <?php if(tx('Account')->check_level(2)): ?>

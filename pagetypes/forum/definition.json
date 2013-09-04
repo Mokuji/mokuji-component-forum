@@ -1,0 +1,14 @@
+{
+  
+  "javascript": [
+    "ForumController.js"
+  ],
+  
+  "templates": {
+    "contentTab": "contentTab.tmpl.php",
+    "forumList": "forumList.tmpl.php"
+  },
+  
+  "controller": "cmsBackend.forum.ForumController"
+  
+}
