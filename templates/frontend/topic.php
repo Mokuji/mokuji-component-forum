@@ -1,3 +1,6 @@
+<?php namespace components\forum; if(!defined('TX')) die('No direct access.'); ?>
+<?php echo load_plugin('jquery_timeago'); ?>
+
 <?php
 
 //Load plugins.
@@ -52,10 +55,13 @@ $pagination = function()use($data){
         <?php __('forum', 'Delete topic'); ?>
       </a>
       <?php endif; ?>
-
+      
+      <?php if($data->check('show_reply')): ?>
       <a data-actions="focus-reply-form scroll-reply-form" class="btn btn-small pull-right" href="#reply-form">
         <?php __('forum', 'Reply'); ?>
       </a>
+      <?php endif; ?>
+      
     </div>
     
   </div>
@@ -137,7 +143,7 @@ $pagination = function()use($data){
       $('#<?php echo $form_id; ?>-textarea-new-post').hide();
       
       //Enable CTRL + Enter submitting
-      $(editor.getElement('editor')).on('keyup', function(e){
+      $(editor.getElement('editor')).on('keydown', function(e){
         if(e.ctrlKey === true && e.keyCode === 13)
           $('#reply-form form').trigger('submit');
       });
@@ -200,7 +206,26 @@ $pagination = function()use($data){
     });
 
   <?php endif; ?>
-
+  
+  function ucFirst(string) {
+    return string.charAt(0).toUpperCase() + string.substring(1);
+  }
+  
+  $('time').each(function(){
+    
+    var $el = $(this);
+    
+    var inWords = $.timeago($el.attr('datetime'));
+    
+    if($el.attr('data-ucfirst') == 'true')
+      inWords = ucFirst(inWords);
+    
+    $el
+      .text(inWords)
+      .attr('title', $el.attr('datetime'));
+    
+  });
+  
 </script>
 
 <?php endif; ?>

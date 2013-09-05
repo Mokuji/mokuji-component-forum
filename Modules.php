@@ -3,8 +3,32 @@
 class Modules extends \dependencies\BaseViews
 {
   
+  protected $permissions = array(
+    'path' => 0,
+    'user_information' => 0
+  );
+  
+  //Return a small user information header.
+  protected function user_information()
+  {
+    
+    return array(
+      'account' => mk('Account')->is_login() ?
+        mk('Sql')
+          ->table('account', 'Accounts')
+          ->pk(mk('Account')->user->id)
+          ->execute_single()
+          ->without('password', 'salt', 'hashing_algorithm') : null,
+      'register_link' => url('menu=KEEP&pid=KEEP&register=true', true),
+      'edit_profile_link' => url('menu=KEEP&pid=KEEP&edit_profile=true', true),
+      'login_link' => url('/admin/', true),
+      'logout_link' => url('action=account/logout')
+    );
+    
+  }
+  
   //Generate a breadcrumb path.
-  public function path($data)
+  protected function path($data)
   {
     
     //Reference interesting variables.
@@ -22,8 +46,8 @@ class Modules extends \dependencies\BaseViews
     //Get deepest node.
     if($fid->is_set()){
       $deepest = $this->table('Forums')
-      ->pk($fid)
-      ->execute_single();
+        ->pk($fid)
+        ->execute_single();
     }
     
     //No deepest node.
@@ -34,19 +58,27 @@ class Modules extends \dependencies\BaseViews
     //Get the root node based on root forum ID.
     if($rfid->is_set()){
       $root = $this->table('Forums')
-      ->pk($rfid)
-      ->execute_single();
+        ->pk($rfid)
+        ->execute_single();
     }
     
-    //Get the root node based on page ID.
+    //Get the root node based on page ID, combined with a deeper node trace.
     elseif($pid->is_set() && $deepest->is_set()){
       $root = $this->table('Forums', $F)
-      ->join('PageLink', $PL)
-      ->where("$PL.page_id", $pid)
-      ->add_hierarchy()
-      ->where('lft', '<=', $deepest->lft)
-      ->where('rgt', '>=', $deepest->rgt)
-      ->execute_single();
+        ->join('PageLink', $PL)
+        ->where("$PL.page_id", $pid)
+        ->add_hierarchy()
+        ->where('lft', '<=', $deepest->lft)
+        ->where('rgt', '>=', $deepest->rgt)
+        ->execute_single();
+    }
+    
+    //Get the root node based on page ID only.
+    elseif($pid->is_set()){
+      $root = $this->table('Forums')
+        ->join('PageLink', $PL)
+        ->where("$PL.page_id", $pid)
+        ->execute_single();
     }
     
     //No root node.
@@ -55,12 +87,8 @@ class Modules extends \dependencies\BaseViews
     }
     
     //Begin the list by adding the "Home"-node.
-    $path = Data(array(
-      array(
-        'title' => 'Home',
-        'link' => url('?pid=KEEP', true)
-      )
-    ));
+    //No, begin the list with the root node. If available.
+    $path = Data();
     
     //Only generate the path of forums if we can start somewhere.
     if($root->is_set())
@@ -84,11 +112,11 @@ class Modules extends \dependencies\BaseViews
         
         //Get all nodes in between the root and the deepest.
         $between = $this->table('Forums')
-        ->add_hierarchy()
-        ->parent_pk(true, $root->id)
-        ->where('lft', '<=', $deepest->lft)
-        ->where('rgt', '>=', $deepest->rgt)
-        ->execute();
+          ->add_hierarchy()
+          ->parent_pk(true, $root->id)
+          ->where('lft', '<=', $deepest->lft)
+          ->where('rgt', '>=', $deepest->rgt)
+          ->execute();
         
         //Add them all to the path array.
         $between->each(function($val)use($path){

@@ -33,15 +33,23 @@ class Topics extends \dependencies\BaseModel
   public function get_extra()
   {
     
-    $posts = $this
+    //Get 1 model.
+    $last_post = $this
       ->table('Posts')
       ->where('topic_id', $this->id)
       ->order('dt_created', 'DESC')
-      ->execute();
-
+      ->execute_single();
+    
+    //The -1 seems to be so the thread starter post is excluded.
+    $num_posts = $this
+      ->table('Posts')
+      ->where('topic_id', $this->id)
+      ->count()->get('int') - 1;
+    
     return array(
-      'last_post' => $posts->{0},
-      'num_posts' => ($posts->size()-1)
+      'last_post' => $last_post,
+      'num_posts' => $num_posts,
+      'num_pages' => mk('Component')->helpers('forum')->calc_pagecount($num_posts)
     );
     
   }

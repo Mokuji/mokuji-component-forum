@@ -3,6 +3,14 @@
 class Views extends \dependencies\BaseViews
 {
   
+  protected $permissions = array(
+    'forum' => 0,
+    'forum_page' => 0,
+    'topics' => 0,
+    'topic' => 0,
+    'topic_edit' => 0
+  );
+  
   //Loads a forum.
   public function forum($options)
   {
@@ -10,13 +18,44 @@ class Views extends \dependencies\BaseViews
     #TODO: Claim account.
     
     //Reference interesting variables.
-    $pid  = $options->pid->value->otherwise(tx('Data')->get->pid);
-    $fid  = tx('Data')->get->fid;
-    $tid  = tx('Data')->get->tid;
-    $edit = tx('Data')->get->do == 'edit';
+    $register = tx('Data')->get->register->validate('Register', array('boolean'));
+    $profile  = tx('Data')->get->edit_profile->validate('Edit profile', array('boolean'));
+    $pid      = $options->pid->value->otherwise(tx('Data')->get->pid);
+    $fid      = tx('Data')->get->fid;
+    $tid      = tx('Data')->get->tid;
+    $edit     = tx('Data')->get->do == 'edit';
+    
+    //Check the sanity of the page number.
+    if(mk('Data')->get->page_number->get('int') < 0){
+      mk('Url')->redirect('page_number=NULL');
+      return;
+    }
+    
+    if($register->is_true())
+    {
+      
+      //Gets a registration form for us.
+      $view = mk('Component')
+        ->modules('account')
+        ->get_html('register', array(
+          'target_url'=>url('register=NULL&edit_profile=true')
+        ));
+      
+    }
+    
+    elseif($profile->is_true())
+    {
+      
+      //Gets a registration form for us.
+      $view = '<div class="clearfix">';
+      $view .= mk('Component')->views('account')->get_html('profile');
+      $view .= mk('Component')->views('community')->get_html('profile', array('edit'=>true));
+      $view .= '</div>';
+      
+    }
     
     //Load a topic based on topic-id?
-    if($tid->is_set()){
+    elseif($tid->is_set()){
       $view = $this->view('topic');
     }
     
@@ -30,9 +69,17 @@ class Views extends \dependencies\BaseViews
       $view = $this->view('topics');
     }
     
-    //Load a list of forums based on page-id?
+    //Load a forum based on page-id?
     elseif($pid->is_set()){
-      $view = $this->view('forum_page', array('pid'=>array('key'=>'pid', 'value'=>$pid->get())));
+      
+      //Get forum associated with this page.
+      $forum = $this->table('Forums')
+        ->join('PageLink', $PL)
+        ->where("$PL.page_id", $pid)
+        ->execute_single();
+      
+      $view = $this->view('topics', array('fid'=>array('key'=>'fid', 'value'=>$forum->id->get())));
+      
     }
     
     //Otherwise redirect to the administrators panel.
@@ -43,10 +90,12 @@ class Views extends \dependencies\BaseViews
     
     //Get the breadcrumb-path.
     $breadcrumbs = $this->module('path');
+    $user_information = $this->module('user_information');
     
     //Return template data.
     return array(
       'breadcrumbs' => $breadcrumbs,
+      'user_information' => $user_information,
       'section' => $view
     );
     
@@ -64,9 +113,9 @@ class Views extends \dependencies\BaseViews
     
     //Get forums associated with this page.
     $forums = $this->table('Forums')
-    ->join('PageLink', $PL)
-    ->where("$PL.page_id", $pid)
-    ->execute();
+      ->join('PageLink', $PL)
+      ->where("$PL.page_id", $pid)
+      ->execute();
     
     //Return template data.
     return array(
@@ -76,26 +125,27 @@ class Views extends \dependencies\BaseViews
   }
   
   //Loads a list of topics and sub-forums based on a forum ID.
-  public function topics()
+  public function topics($options)
   {
     
     //Reference interesting variables.
-    $fid = tx('Data')->get->fid;
+    $fid = $options->fid->value->otherwise(tx('Data')->get->fid);
     
     //Validate them.
     $fid->validate('Forum ID', array('required', 'number'=>'int', 'gt'=>0));
     
     //Get sub-forums.
     $subforums = $this->table('Forums')
-    ->parent_pk($fid)
-    ->add_relative_depth()
-    ->max_depth(1)
-    ->execute();
+      ->parent_pk($fid)
+      ->add_relative_depth()
+      ->max_depth(1)
+      ->execute();
     
     //Get topics.
     $topics = $this->table('Topics')
-    ->where('forum_id', $fid)
-    ->execute();
+      ->where('forum_id', $fid)
+      ->order('dt_created', 'DESC')
+      ->execute();
     
     //Return template data.
     return array(
@@ -141,6 +191,12 @@ class Views extends \dependencies\BaseViews
     $total_pages = $this->helper('calc_pagecount', $num_replies);
     $last_page = ($total_pages-1);
     $new_page_on_reply = $this->helper('calc_pagecount', $num_replies->get('int')+1) > $total_pages;
+    
+    //Check the sanity of the page number.
+    if(mk('Data')->get->page_number->get('int') > $last_page){
+      mk('Url')->redirect('page_number='.$last_page);
+      return;
+    }
     
     //Get pages.
     // $P = '`#__forum_posts`';

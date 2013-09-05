@@ -8,15 +8,12 @@
   padding:5px;
   margin:5px 0px;
   line-height:2.5em;
-  
-  /*border:1px solid #ccc;*/
-  /*border-radius:4px;*/
-  
   border:1px solid #bfbfbf;
-  /*-moz-box-shadow:0 1px 0 #fff inset;
-  -webkit-box-shadow:0 1px 0 #fff inset;
-  box-shadow:0 1px 0 #fff inset;*/
+  
+  -moz-box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.15);
+  -webkit-box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.15);
   box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.15);
+  
   background:#cfd1cf;
   background-image:-webkit-gradient(linear,left top,left bottom,from(#ebebeb),to(#cfd1cf));
   background-image:-moz-linear-gradient(top,#ebebeb,#cfd1cf);
@@ -81,6 +78,45 @@
 ---------------------------------------------------------------
 */
 
+#edit-profile-form,
+.user-profile-edit{
+  width:40%;
+  float:left;
+  margin:0 5%;
+}
+#edit-profile-form .validation-error,
+.user-profile-edit .validation-error{
+  font-style:italic;
+  color:#f55;
+}
+
+#edit-profile-form .ctrlHolder,
+.user-profile-edit .ctrlHolder,
+#edit-profile-form .buttonHolder,
+.user-profile-edit .buttonHolder {
+  clear:both;
+  margin:0;
+  padding:5px 0;
+}
+
+#edit-profile-form label,
+.user-profile-edit label,
+#edit-profile-form .label,
+.user-profile-edit .label {
+  display:block;
+}
+
+#edit-profile-form label,
+.user-profile-edit label,
+#edit-profile-form button,
+.user-profile-edit button {
+  cursor:pointer;
+}
+
+.account-registration .form .buttonHolder {
+  padding:0.5em 1em;
+  text-align:right;
+}
 
 .plupload-container .header{
   text-align:center;
@@ -168,38 +204,62 @@
   padding:0;
 }
 
-.breadcrumb{
+.tx-forum-meta .breadcrumb{
   padding:0px 20px;
   margin:0;
   list-style:none;
 }
-  .breadcrumb li{
+  .tx-forum-meta .breadcrumb li{
     display:inline;
   }
-  .breadcrumb a,
-  .breadcrumb .divider{
+  .tx-forum-meta .breadcrumb a,
+  .tx-forum-meta .breadcrumb .divider{
     opacity:0.4;
   }
-    .breadcrumb a:hover{
+    .tx-forum-meta .breadcrumb a:hover{
       opacity:1;
     }
 
+.tx-forum-meta .user-information{
+  float:right;
+  font-size:80%;
+}
+
 .tx-forum{
-  padding:0 20px !important;
   box-sizing:border-box;
   -moz-box-sizing:border-box; /* Firefox */
   -webkit-box-sizing:border-box; /* Safari */
 }
 
 /* Forum overview */
+.tx-forum table.table-bordered{
+  width:100%;
+  margin:10px 0;
+}
 .tx-forum .table-bordered tr{
-  background:rgba(255,255,255,0.5); 
+  background:rgba(255,255,255,0.4);
 }
 .tx-forum .table-bordered thead tr{
-  background:rgba(0,0,0,0.03); 
+  background:rgba(0,0,0,0.03);
 }
   .tx-forum .table-bordered tbody tr:hover{
-    background:rgba(255,255,255,0.1); 
+    background:rgba(255,255,255,0.7);
+  }
+
+.tx-forum .table-bordered th{
+  padding:0.2em 0.5em;
+}
+.tx-forum .table-bordered td{
+  padding:0.5em;
+}
+  .tx-forum .table-bordered .forum-title{
+    width:60%;
+  }
+  .tx-forum .table-bordered .forum-topics,
+  .tx-forum .table-bordered .forum-posts,
+  .tx-forum .table-bordered .forum-lastpost,
+  .tx-forum .table-bordered .forum-replies{
+    text-align:right;
   }
 
 /* Forum pagination */
@@ -253,7 +313,7 @@
   }
   .topic-starter-topic .topic-starter-title{
     font-size:2em;
-    line-height:2.5em;
+    padding:0.8em 0;
   }
   .topic-starter-topic .pagination,
   .topic-starter-topic .topic-starter-title{
@@ -262,7 +322,7 @@
 .topic-starter-wrapper{
   line-height:1.5em;
   padding:15px;
-  border-radius:3px;
+  border-radius:5px;
   background:rgba(0,0,0,0.09);
   margin-bottom:10px;
 }
@@ -288,12 +348,22 @@
   display:none;
 }
   .forum-topic-reply{
+    position:relative;
     line-height:1.5em;
     margin-bottom:10px;
-    border-radius:3px;
+    border-radius:5px;
     padding:15px;
-    background:rgba(0,0,0,0.09);
+    background:rgba(180,180,180,0.09);
   }
+    .forum-topic-reply .forum-topic-reply-operations{
+      position:absolute;
+      top:5px;
+      right:10px;
+    }
+    
+    .topic-starter-topic .forum-topic-reply{
+      background:rgba(60,60,60,0.09);
+    }
     .forum-topic-reply header{
       border-bottom:1px solid rgba(0,0,0,0.1);
     }
@@ -314,9 +384,9 @@
 .forum-topic-reply-form{
     line-height:1.5em;
     margin-bottom:10px;
-    border-radius:3px;
+    border-radius:5px;
     padding:15px;
-    background:rgba(0,0,0,0.15);
+    background:rgba(60,60,60,0.09);
   }
   .forum-topic-reply-form fieldset,
   .forum-topic-reply-form legend{
@@ -335,4 +405,16 @@
 
 #textarea-new-post{
   display:none;
+}
+
+/* New topic form */
+.forum-topic-form .title-field{
+  font-size:110%;
+  padding:0.3em;
+  margin:0.5em 0;
+  width:98%;
+}
+.forum-topic-form .button-set{
+  padding-top:10px;
+  margin:0;
 }

@@ -3,6 +3,11 @@
 class Json extends \dependencies\BaseComponent
 {
   
+  protected $permissions = array(
+    'create_post' => 1,
+    'create_topic' => 1
+  );
+  
   //Creates a new forum post in the given topic under the currently logged in user.
   public function create_post($data, $parameters)
   {
@@ -13,6 +18,11 @@ class Json extends \dependencies\BaseComponent
     }
     
     #TODO: Authorise user write permissions in the associated forum.
+    
+    //Sanitize the content.
+    $data->content->set(
+      htmlspecialchars($data->content->get())
+    );
     
     //Reference interesting variables.
     $uid = tx('Account')->user->id;
@@ -101,6 +111,12 @@ class Json extends \dependencies\BaseComponent
     }
     
     #TODO: Authorise user write permissions in the associated forum.
+    
+    //Sanitize the title and content.
+    $data->merge(array(
+      'title' => htmlspecialchars($data->title->get()),
+      'content' => htmlspecialchars($data->content->get())
+    ));
     
     //Reference interesting variables.
     $uid = tx('Account')->user->id;

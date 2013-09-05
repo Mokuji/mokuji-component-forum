@@ -1,3 +1,5 @@
+<?php namespace components\forum; if(!defined('TX')) die('No direct access.'); ?>
+
 <section class="forum-overview">
   
   <h1>Forums</h1>

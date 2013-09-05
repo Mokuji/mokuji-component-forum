@@ -24,6 +24,16 @@ class Posts extends \dependencies\BaseModel
   //A cache for Account objects.
   private $authors = [];
   
+  public function get_topic()
+  {
+    
+    return mk('Sql')
+      ->table('forum', 'Topics')
+      ->pk($this->topic_id)
+      ->execute_single();
+    
+  }
+  
   //Return the Account object associated with the author of this post.
   public function get_author()
   {

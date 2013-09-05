@@ -3,6 +3,13 @@
 class Helpers extends \dependencies\BaseViews
 {
   
+  protected $permissions = array(
+    'get_replies' => 0,
+    'get_forum' => 0,
+    'calc_offset' => 0,
+    'calc_pagecount' => 0
+  );
+  
   //Get replies to a given topic.
   public function get_replies($tid, $offset=0, $per_page=null)
   {

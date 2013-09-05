@@ -1,3 +1,5 @@
+<?php namespace components\forum; if(!defined('TX')) die('No direct access.'); ?>
+
   <article class="forum-topic-reply clearfix" id="forum-reply-<?php echo $data->id; ?>">
     
     <?php if($data->check('is_latest')): ?>
@@ -13,16 +15,20 @@
         </div>
         
         <div class="span10">
-          <time pubdate datetime="<?php echo $data->dt_created; ?>"><?php echo $data->dt_created; ?></time>
-          <!-- <a class="btn btn-mini btn-submit pull-right">Quote</a> -->
-
-          <?php if(tx('Account')->check_level(2)): ?>
-            <a data-post-id="<?php echo $data->id; ?>" class="btn-delete-post btn btn-mini pull-right">
-              <?php __('forum', 'Delete post'); ?>
-            </a>
-          <?php endif; ?>
-
+          <small>
+            Posted <time pubdate datetime="<?php echo $data->dt_created; ?>"><?php echo $data->dt_created; ?></time>
+          </small>
         </div>
+        
+        <?php if(tx('Account')->check_level(2)): ?>
+          <div class="forum-topic-reply-operations">
+            <small>
+              <a data-post-id="<?php echo $data->id; ?>" class="btn-delete-post btn btn-mini pull-right" href="#">
+                <?php __('forum', 'Delete post'); ?>
+              </a>
+            </small>
+          </div>
+        <?php endif; ?>
       <!-- </h2> -->
     </header>
     
@@ -45,7 +51,9 @@
     
     <footer class="span10 pull-right signature clearfix">
       <div class="inner">
-        <p><?php echo $data->author->signature; ?></p>
+        <small>
+          <p><?php echo $data->author->signature; ?></p>
+        </small>
       </div>
     </footer>
     

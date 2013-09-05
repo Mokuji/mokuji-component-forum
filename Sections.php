@@ -3,6 +3,11 @@
 class Sections extends \dependencies\BaseViews
 {
   
+  protected $permissions = array(
+    'reply' => 0,
+    'reply_js' => 0
+  );
+  
   //Load a single reply, providing the data.
   public function reply($data)
   {
