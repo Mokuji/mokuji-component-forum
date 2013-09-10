@@ -48,7 +48,6 @@ class Views extends \dependencies\BaseViews
       
       //Gets a registration form for us.
       $view = '<div class="clearfix">';
-      $view .= mk('Component')->views('account')->get_html('profile');
       $view .= mk('Component')->views('community')->get_html('profile', array('edit'=>true));
       $view .= '</div>';
       

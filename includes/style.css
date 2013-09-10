@@ -78,37 +78,45 @@
 ---------------------------------------------------------------
 */
 
-#edit-profile-form,
-.user-profile-edit{
-  width:40%;
+/* Forms */
+.user-profile-edit fieldset{
   float:left;
-  margin:0 5%;
+  width:43%;
+  margin:0 2%;
 }
-#edit-profile-form .validation-error,
+.user-profile-edit .buttonHolder .primaryAction{
+  font-size:150%;
+}
+.user-profile-edit .preview-image{
+  height:auto !important;
+}
 .user-profile-edit .validation-error{
   font-style:italic;
   color:#f55;
 }
 
-#edit-profile-form .ctrlHolder,
 .user-profile-edit .ctrlHolder,
-#edit-profile-form .buttonHolder,
 .user-profile-edit .buttonHolder {
   clear:both;
   margin:0;
   padding:5px 0;
 }
+.user-profile-edit .buttonHolder{
+  margin:5px 2%;
+  text-align:right;
+}
+  .user-profile-edit .ctrlHolder input[type="text"],
+  .user-profile-edit .ctrlHolder input[type="password"],
+  .user-profile-edit .ctrlHolder textarea{
+    width:98%;
+  }
 
-#edit-profile-form label,
 .user-profile-edit label,
-#edit-profile-form .label,
 .user-profile-edit .label {
   display:block;
 }
 
-#edit-profile-form label,
 .user-profile-edit label,
-#edit-profile-form button,
 .user-profile-edit button {
   cursor:pointer;
 }
@@ -118,6 +126,8 @@
   text-align:right;
 }
 
+
+/* Plupload */
 .plupload-container .header{
   text-align:center;
 }
