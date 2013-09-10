@@ -51,6 +51,17 @@ $pagination = function()use($data){
     <div class="topic-operations">
       
       <?php if(tx('Account')->check_level(2)): ?>
+      
+      <?php
+        echo $data->target_fora
+          ->as_options('new_forum_id', 'title', 'id', array(
+            'id' => "topic_mover_$form_id",
+            'tooltip' => 'description',
+            'indent_field' => 'depth',
+            'placeholder_text' => __('forum', 'Move forum',true)
+          ));
+      ?>
+      
       <a data-topic-id="<?php echo $data->topic->id; ?>" class="btn-delete-topic btn btn-small pull-right">
         <?php __('forum', 'Delete topic'); ?>
       </a>
@@ -170,41 +181,53 @@ $pagination = function()use($data){
   });
 
   <?php if(tx('Account')->check_level(2)): ?>
-
+    
     //Delete topic.
     $(function(){
+      
       $('.btn-delete-topic').on('click', function(e){
-
+        
         e.preventDefault();
-
+        
         if(confirm('Are you sure you want to delete this topic?')){
           $.rest('GET', "<?php echo url('?rest=forum/delete_topic/',1); ?>"+$(e.target).data('topic-id'))
             .done(function(result){
               document.location = "<?php echo url('pid=KEEP&fid=KEEP',1); ?>";
             });
         }
-
+        
       });
-    });
-
-    //Delete post.
-    $(function(){
+      
+      //Delete post.
       $('.btn-delete-post').on('click', function(e){
-
+        
         e.preventDefault();
-
+        
         var that = $(this);
-
+        
         if(confirm('Are you sure you want to delete this post?')){
           $.rest('GET', "<?php echo url('?rest=forum/delete_post/',1); ?>"+$(e.target).data('post-id'))
             .done(function(result){
               $(that).closest('.forum-topic-reply').slideUp();
             });
         }
-
+        
       });
+      
+      //Move topic.
+      $('#<?php echo "topic_mover_$form_id"; ?>').on('change', function(e){
+        
+        if(confirm('Are you sure you want to move this topic?')){
+          $.rest('POST', "<?php echo url('?rest=forum/topic_move/'.$data->topic->id); ?>", {forum_id: $(e.target).val()})
+            .done(function(result){
+              window.location = result.link.output;
+            });
+        }
+        
+      });
+      
     });
-
+    
   <?php endif; ?>
   
   function ucFirst(string) {

@@ -156,7 +156,7 @@ class Views extends \dependencies\BaseViews
   }
   
   //Loads a list of posts based on a topic ID.
-  public function topic()
+  public function topic($options)
   {
     
     //Reference interesting variables.
@@ -230,6 +230,20 @@ class Views extends \dependencies\BaseViews
     tx('Ob')->add(load_plugin('epiceditor'), 'script', 'epiceditor');
     #TODO: Load script from includes. -- tx('Ob')->add('<script src=""></script>', 'script', 'topic');
     
+    //Gets the god forum, as root for the moving operation.
+    $pid = $options->pid->value->otherwise(tx('Data')->get->pid);
+    $pid->validate('Page ID', array('required', 'number'=>'int', 'gt'=>0));
+    $god_forum = $this->table('Forums')
+      ->join('PageLink', $PL)
+      ->where("$PL.page_id", $pid)
+      ->execute_single();
+    
+    $target_fora = mk('Sql')
+      ->table('forum', 'Forums')
+      ->parent_pk(true, $god_forum->id->get())
+      ->add_absolute_depth('depth')
+      ->execute();
+    
     //Return template data.
     return array(
       'topic' => $topic,
@@ -237,6 +251,7 @@ class Views extends \dependencies\BaseViews
       'replies' => $replies,
       'show_starter' => ($offset == 0),
       'show_reply' => (tx('Account')->user->check('login') /*#TODO: && check_write_permission() */),
+      'target_fora' => $target_fora,
       'pager' => array(
         'pages' => $pages,
         'first_page' => ($page_number === 0),

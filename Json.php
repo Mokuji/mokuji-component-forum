@@ -142,6 +142,30 @@ class Json extends \dependencies\BaseComponent
     return Data($post->get())->merge($topic->get());
     
   }
+  
+  public function create_topic_move($data, $params)
+  {
+    
+    return mk('Sql')
+      ->table('forum', 'Topics')
+      ->pk($params->{0})
+      ->execute_single()
+      ->is('empty', function(){
+        throw new \exception\NotFound('No topic with this ID.');
+      })
+      ->merge($data->having('forum_id'))
+      ->save()
+      ->is(true, function($topic)use($data){
+        
+        $topic->extra;
+        
+        $topic->link->data->merge(array('fid'=>$data->forum_id));
+        $topic->link->segments->query->set(http_build_query($topic->link->data->as_array(), null, '&'));
+        $topic->link->rebuild_output();
+        
+      });
+    
+  }
 
   //Delete the given topic.
   public function get_delete_topic($data, $params)
