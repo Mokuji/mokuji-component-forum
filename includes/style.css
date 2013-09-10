@@ -232,6 +232,86 @@
 }
 
 /* Forum overview */
+.tx-forum .forum-banners{
+  list-style:none;
+}
+.tx-forum > .forum-banners{
+  margin:16px auto;
+  width:60%;
+}
+  .tx-forum .depth-1 > .forum-banners.subfora{
+    margin-bottom:2em;
+  }
+
+.tx-forum .forum-banner{
+  margin:3px;
+}
+.tx-forum .forum-information-wrapper{
+  padding:0.8em;
+  background:rgba(0,0,0,0.05);
+  border-radius:1em;
+}
+.tx-forum .forum-information-wrapper:hover{
+  background:rgba(0,0,0,0.1);
+}
+  .tx-forum .forum-banner .forum-title{
+    margin:0;
+  }
+  .tx-forum .forum-banner .forum-description{
+    opacity:0.7;
+  }
+  .tx-forum .forum-banner .forum-meta{
+    display:none;
+  }
+  .tx-forum .forum-banner .forum-lastpost{
+    font-size:80%;
+    text-align:right;
+    opacity:0.7;
+  }
+  .tx-forum .forum-banner .forum-lastpost-title:before,
+  .tx-forum .forum-banner .forum-lastpost-title:after{
+    content:'"';
+  }
+  .tx-forum .forum-banner .forum-lastpost-label-by,
+  .tx-forum .forum-banner .forum-lastpost-author{
+    display:none;
+  }
+  .tx-forum .forum-banner .forum-lastpost-author-wrap{
+    display:inline;
+  }
+
+/* Depth 2 */
+.tx-forum .forum-banner.depth-2 .forum-information-wrapper{
+  padding:0.5em;
+  border-radius:0.6em;
+  background:rgba(100,100,100,0.05);
+}
+.tx-forum .forum-banner.depth-2 .forum-information-wrapper:hover{
+  background:rgba(100,100,100,0.1);
+}
+.tx-forum .forum-banner.depth-2 .forum-title{
+  font-size:100%;
+}
+.tx-forum .forum-banner.depth-2 .forum-title,
+.tx-forum .forum-banner.depth-2 .forum-description{
+  display:inline;
+}
+.tx-forum .forum-banner.depth-2 .forum-description:before{
+  content:'- ';
+}
+
+/* Depth 3 */
+.tx-forum .forum-banner.depth-3 .forum-information-wrapper{
+  font-size:85%;
+  padding:0.3em 0.5em;
+  border-radius:0.4em;
+  background:rgba(200,200,200,0.05);
+}
+.tx-forum .forum-banner.depth-3 .forum-information-wrapper:hover{
+  background:rgba(200,200,200,0.1);
+}
+
+
 .tx-forum table.table-bordered{
   width:100%;
   margin:10px 0;
@@ -344,7 +424,7 @@
 }
 
 /* Reply box */
-.forum-topic-replies h1{
+.forum-topic-replies > h1{
   display:none;
 }
   .forum-topic-reply{

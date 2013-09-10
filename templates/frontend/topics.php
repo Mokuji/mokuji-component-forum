@@ -3,53 +3,23 @@
 <?php echo load_plugin('jquery_timeago'); ?>
 
 <?php if($data->subforums->size() > 0): ?>
-
-  <h2 class="hidden">Sub forums</h2>
-
-    <table class="table table-bordered forum-subforum-overview" cellspacing="1">
-      <thead>
-        <tr>
-          <th>Forum</th>
-          <th>Topics</th>
-          <th>Posts</th>
-          <th>Last post</th>
-        </tr>
-      </thead>
-      <tfoot></tfoot>
-      <tbody>  
-        <?php foreach($data->subforums as $forum): ?>
-        <tr class="forum-subforum-list">
-          <td class="forum-title">
-            <a href="<?php echo $forum->link; ?>"><?php echo $forum->title; ?></a>
-          </td>
-          <td class="forum-topics">
-            <?php echo number_format($forum->extra->num_topics->get()); ?>
-          </td>
-          <td class="forum-posts">
-            <?php echo number_format($forum->extra->num_posts->get()); ?>
-          </td>
-          <td class="forum-lastpost">
-            <?php if($forum->extra->last_post->is_set()): ?>
-            <small>
-              <!-- <a href="<?php echo url('tid='.$forum->extra->last_post->topic_id); ?>"> -->
-              <a class="lastpost" href="<?php echo url('tid='.$forum->extra->last_post->topic_id.'&page_number='.($forum->extra->last_post->topic->extra->num_pages->get('int') - 1)); ?>#forum-reply-<?php echo $forum->extra->last_post->id; ?>">
-                <!-- In: <?php echo $forum->extra->last_post->topic_title; ?>, -->
-                <time pubdate data-ucfirst="true" datetime="<?php echo $forum->extra->last_post->dt_created; ?>"><?php echo $forum->extra->last_post->dt_created; ?></time>
-              </a>
-            </small>
-            <?php else: ?>
-              <small><?php echo __('forum', 'No posts yet'); ?></small>
-            <?php endif; ?>
-          </td>
-        </tr>
-        <?php endforeach; ?>
-      </tbody>
-    </table>
+  
+  <h2 class="hidden">Subfora</h2>
+  
+  <ol class="forum-banners">
+    
+    <?php
+      foreach($data->subforums as $subforum)
+        echo mk('Component')->sections('forum')->get_html('forum_banner', $subforum->merge(array('depth' => $data->forum->depth->get('int'))));
+    ?>
+    
+  </ol>
+  
 <?php endif; ?>
 
 <h2 class="hidden">Topics</h2>
 
-<?php if(true): /*TODO: make a category setting "has_topic" */ ?>
+<?php if(!$data->is_god->is_true()): /*TODO: make a category setting "has_topic" */ ?>
 <div class="topic-starter-header clearfix">
 
   <div class="pull-right">

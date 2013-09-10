@@ -134,10 +134,24 @@ class Views extends \dependencies\BaseViews
     //Validate them.
     $fid->validate('Forum ID', array('required', 'number'=>'int', 'gt'=>0));
     
+    //Gets the god forum, as root for listing the subfora.
+    $pid = $options->pid->value->otherwise(tx('Data')->get->pid);
+    $pid->validate('Page ID', array('required', 'number'=>'int', 'gt'=>0));
+    $god_forum = $this->table('Forums')
+      ->join('PageLink', $PL)
+      ->where("$PL.page_id", $pid)
+      ->execute_single();
+    
+    //Find the current forum.
+    $forum = $this->table('Forums')
+      ->pk($fid)
+      ->add_absolute_depth('depth')
+      ->execute_single();
+    
     //Get sub-forums.
     $subforums = $this->table('Forums')
-      ->parent_pk($fid)
-      ->add_relative_depth()
+      ->parent_pk($forum->id)
+      ->add_relative_depth('depth')
       ->max_depth(1)
       ->execute();
     
@@ -149,8 +163,10 @@ class Views extends \dependencies\BaseViews
     
     //Return template data.
     return array(
+      'forum' => $forum,
       'subforums' => $subforums,
-      'topics' => $topics
+      'topics' => $topics,
+      'is_god' => $god_forum->id->get('int') == $forum->id->get('int')
     );
     
   }
@@ -267,23 +283,23 @@ class Views extends \dependencies\BaseViews
  
   public function topic_edit($data)
   {
-
+    
     //Reference interesting variables.
     $pid = tx('Data')->get->pid;
     $fid = tx('Data')->get->fid;
     $tid = tx('Data')->get->tid;
-
+    
     //Validate.
     $fid->validate('Forum ID', array('required', 'number'=>'int', 'gt'=>0));
-
+    
     //Load required includes into the output buffer.
     tx('Ob')->add(load_plugin('epiceditor'), 'script', 'epiceditor');
     #TODO: Load script from includes. -- tx('Ob')->add('<script src=""></script>', 'script', 'topic');
-
+    
     return array(
       'forum' => $this->helper('get_forum', $fid)
     );
-
+    
   }
-
+  
 }

@@ -5,8 +5,19 @@ class Sections extends \dependencies\BaseViews
   
   protected $permissions = array(
     'reply' => 0,
+    'forum_banner' => 0,
     'reply_js' => 0
   );
+  
+  public function forum_banner($data)
+  {
+    
+    return $data
+      ->merge(array(
+        'depth' => $data->depth->otherwise(1)
+      ));
+    
+  }
   
   //Load a single reply, providing the data.
   public function reply($data)

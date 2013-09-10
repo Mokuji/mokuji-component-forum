@@ -67,7 +67,7 @@ $form_id = 'form'.tx('Security')->random_string(10);
       //Enable CTRL + Enter submitting
       $(editor.getElement('editor')).on('keydown', function(e){
         if(e.ctrlKey === true && e.keyCode === 13)
-          $('#reply-form form').trigger('submit');
+          $('.forum-topic-form form').trigger('submit');
       });
       
     });
