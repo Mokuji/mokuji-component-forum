@@ -20,9 +20,9 @@ class Json extends \dependencies\BaseComponent
     #TODO: Authorise user write permissions in the associated forum.
     
     //Sanitize the content.
-    $data->content->set(
-      htmlspecialchars($data->content->get())
-    );
+    // $data->content->set(
+    //   htmlspecialchars($data->content->get())
+    // );
     
     //Reference interesting variables.
     $uid = tx('Account')->user->id;
@@ -115,7 +115,7 @@ class Json extends \dependencies\BaseComponent
     //Sanitize the title and content.
     $data->merge(array(
       'title' => htmlspecialchars($data->title->get()),
-      'content' => htmlspecialchars($data->content->get())
+      'content' => /*htmlspecialchars(*/$data->content->get()/*)*/
     ));
     
     //Reference interesting variables.

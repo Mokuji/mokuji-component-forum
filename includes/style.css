@@ -367,6 +367,9 @@
     .forum-topic-reply header{
       border-bottom:1px solid rgba(0,0,0,0.1);
     }
+      .forum-topic-reply .forum-reply-message img{
+        max-width:100%;
+      }
       .forum-reply-content{
         padding:15px 0;
       }

@@ -12,6 +12,20 @@ class Sections extends \dependencies\BaseViews
   public function reply($data)
   {
     
+    $data->content->is('set', function($content){
+      
+      //Initialize the markdown parser.
+      load_plugin('php_markdown');
+      $parser = new \Michelf\MarkdownExtra();
+      $parser->no_markup = true;
+      
+      //Parse it now.
+      $content->set(
+        $parser->transform($content->get())
+      );
+      
+    });
+    
     return $data;
     
   }

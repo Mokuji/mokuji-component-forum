@@ -44,8 +44,7 @@
         </a>
       </div>
       <div class="span10 forum-reply-message">
-        <!-- TODO: Parse Markdown: https://github.com/michelf/php-markdown -->
-        <?php echo nl2br($data->content->get()); ?>
+        <?php echo $data->content->get(); ?>
       </div>
     </div>
     
