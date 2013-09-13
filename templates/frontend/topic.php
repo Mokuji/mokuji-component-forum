@@ -230,25 +230,37 @@ $pagination = function()use($data){
     
   <?php endif; ?>
   
+</script>
+
+<?php endif; ?>
+
+<script type="text/javascript">
+  
   function ucFirst(string) {
     return string.charAt(0).toUpperCase() + string.substring(1);
   }
   
-  $('time').each(function(){
+  jQuery(function($){
     
-    var $el = $(this);
+    console.log('Why?');
     
-    var inWords = $.timeago($el.attr('datetime'));
-    
-    if($el.attr('data-ucfirst') == 'true')
-      inWords = ucFirst(inWords);
-    
-    $el
-      .text(inWords)
-      .attr('title', $el.attr('datetime'));
+    $('time').each(function(){
+      
+      console.log('Transcribing');
+      
+      var $el = $(this);
+      
+      var inWords = $.timeago($el.attr('datetime'));
+      
+      if($el.attr('data-ucfirst') == 'true')
+        inWords = ucFirst(inWords);
+      
+      $el
+        .text(inWords)
+        .attr('title', $el.attr('datetime'));
+      
+    });
     
   });
   
 </script>
-
-<?php endif; ?>
