@@ -47,11 +47,13 @@ class Views extends \dependencies\BaseViews
     elseif($login->is_true())
     {
       
+      load_plugin('jquery_rest');
+      
       //Gets a login form for us.
       $view = mk('Component')
         ->sections('account')
         ->get_html('login_form', array(
-          // 'target_url'=>url('register=NULL&edit_profile=true')
+          'target_url'=>url('login=NULL&register=NULL&edit_profile=NULL')
         ));
       
     }
