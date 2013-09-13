@@ -18,6 +18,7 @@ class Views extends \dependencies\BaseViews
     #TODO: Claim account.
     
     //Reference interesting variables.
+    $login    = tx('Data')->get->login->validate('Login', array('boolean'));
     $register = tx('Data')->get->register->validate('Register', array('boolean'));
     $profile  = tx('Data')->get->edit_profile->validate('Edit profile', array('boolean'));
     $pid      = $options->pid->value->otherwise(tx('Data')->get->pid);
@@ -39,6 +40,18 @@ class Views extends \dependencies\BaseViews
         ->modules('account')
         ->get_html('register', array(
           'target_url'=>url('register=NULL&edit_profile=true')
+        ));
+      
+    }
+    
+    elseif($login->is_true())
+    {
+      
+      //Gets a login form for us.
+      $view = mk('Component')
+        ->sections('account')
+        ->get_html('login_form', array(
+          // 'target_url'=>url('register=NULL&edit_profile=true')
         ));
       
     }

@@ -21,7 +21,7 @@ class Modules extends \dependencies\BaseViews
           ->without('password', 'salt', 'hashing_algorithm') : null,
       'register_link' => url('menu=KEEP&pid=KEEP&register=true', true),
       'edit_profile_link' => url('menu=KEEP&pid=KEEP&edit_profile=true', true),
-      'login_link' => url('/admin/', true),
+      'login_link' => url('menu=KEEP&pid=KEEP&login=true', true),
       'logout_link' => url('action=account/logout')
     );
     

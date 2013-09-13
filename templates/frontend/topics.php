@@ -2,7 +2,7 @@
 
 <?php echo load_plugin('jquery_timeago'); ?>
 
-<?php if(!$data->is_god->is_true()): /*TODO: make a category setting "has_topic" */ ?>
+<?php if(!$data->is_god->is_true()): ?>
 <div class="forum-banner depth-1">
   <h1 class="forum-title"><?php echo $data->forum->title; ?></h1>
   <p class="forum-description"><?php echo $data->forum->description; ?></p>
@@ -11,7 +11,9 @@
 
 <?php if($data->subforums->size() > 0): ?>
   
-  <h3 class="forum-subfora">Subfora</h3>
+  <?php if(!$data->is_god->is_true()): ?>
+    <h3 class="forum-subfora">Subfora</h3>
+  <?php endif; ?>
   
   <ol class="forum-banners">
     
