@@ -32,6 +32,19 @@ class Views extends \dependencies\BaseViews
       return;
     }
     
+    //Check for profile editing when not logged in.
+    if($profile->is_true() && !mk('Account')->is_login()){
+      mk('Url')->redirect(url('edit_profile=NULL&login=true'));
+      return;
+    }
+    
+    //Check for login or register when logged in.
+    elseif(mk('Account')->is_login() && ($login->is_true() || $register->is_true())){
+      mk('Url')->redirect(url('login=NULL&register=NULL&edit_profile=true'));
+      return;
+    }
+    
+    
     if($register->is_true())
     {
       
@@ -39,7 +52,8 @@ class Views extends \dependencies\BaseViews
       $view = mk('Component')
         ->modules('account')
         ->get_html('register', array(
-          'target_url'=>url('register=NULL&edit_profile=true')
+          'target_url'=>url('register=NULL&edit_profile=true'),
+          'autofocus' => true
         ));
       
     }
@@ -53,7 +67,8 @@ class Views extends \dependencies\BaseViews
       $view = mk('Component')
         ->sections('account')
         ->get_html('login_form', array(
-          'target_url'=>url('login=NULL&register=NULL&edit_profile=NULL')
+          'target_url'=>url('login=NULL&register=NULL&edit_profile=NULL'),
+          'autofocus' => true
         ));
       
     }
