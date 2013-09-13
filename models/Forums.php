@@ -26,7 +26,7 @@ class Forums extends \dependencies\BaseModel
   public function get_link()
   {
     
-    return url("?pid=KEEP&rfid=KEEP&fid=".$this->__get('id'), true);
+    return url("?pid=KEEP&menu=KEEP&rfid=KEEP&fid=".$this->__get('id'), true);
     
   }
 

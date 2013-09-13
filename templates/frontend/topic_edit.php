@@ -11,11 +11,11 @@ $form_id = 'form'.tx('Security')->random_string(10);
 ?>
 
 <!-- New/Edit topic form. -->
-<section class="forum-topic-form span12 alpha">
+<section class="forum-topic-form">
   
   <form method="POST" action="<?php echo url('?rest=forum/topic'); ?>" id="<?php echo $form_id; ?>">
 
-    <fieldset class="span12 alpha">
+    <fieldset class="">
 
       <legend><?php __('forum', 'New topic'); ?></legend>
       

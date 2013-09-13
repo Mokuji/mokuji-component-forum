@@ -22,8 +22,8 @@
 <?php if(!$data->is_god->is_true()): /*TODO: make a category setting "has_topic" */ ?>
 <div class="topic-starter-header clearfix">
 
-  <div class="pull-right">
-    <a href="<?php echo url('do=edit'); ?>" class="btn btn-small pull-right">
+  <div class="">
+    <a href="<?php echo url('do=edit'); ?>" class="btn btn-small">
       <?php __('forum', 'New topic'); ?>
     </a>
   </div>

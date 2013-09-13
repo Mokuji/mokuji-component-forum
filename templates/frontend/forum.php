@@ -7,7 +7,7 @@
   <?php echo $data->breadcrumbs; ?>
 </div>
 
-<div class="tx-forum row-fluid alpha">
-<?php echo $data->section; ?>
+<div class="tx-forum">
+  <?php echo $data->section; ?>
 </div>
 

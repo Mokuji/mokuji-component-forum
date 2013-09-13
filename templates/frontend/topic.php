@@ -44,7 +44,7 @@ $pagination = function()use($data){
 <section id="topic-starter" class="topic-starter-topic">
   
   <div class="topic-starter-header clearfix">
-    <h1 class="topic-starter-title span7"><?php echo $data->topic->title; ?></h1>
+    <h1 class="topic-starter-title"><?php echo $data->topic->title; ?></h1>
     <?php $pagination(); ?>
     
     <!-- #TODO: Make this button nice. -->
@@ -58,17 +58,18 @@ $pagination = function()use($data){
             'id' => "topic_mover_$form_id",
             'tooltip' => 'description',
             'indent_field' => 'depth',
+            'class' => 'forum-topic-mover',
             'placeholder_text' => __('forum', 'Move forum',true)
           ));
       ?>
       
-      <a data-topic-id="<?php echo $data->topic->id; ?>" class="btn-delete-topic btn btn-small pull-right">
+      <a data-topic-id="<?php echo $data->topic->id; ?>" class="btn-delete-topic btn">
         <?php __('forum', 'Delete topic'); ?>
       </a>
       <?php endif; ?>
       
       <?php if($data->check('show_reply')): ?>
-      <a data-actions="focus-reply-form scroll-reply-form" class="btn btn-small pull-right" href="#reply-form">
+      <a data-actions="focus-reply-form scroll-reply-form" class="btn" href="#reply-form">
         <?php __('forum', 'Reply'); ?>
       </a>
       <?php endif; ?>
@@ -101,24 +102,24 @@ $pagination = function()use($data){
 <?php if($data->check('show_reply')): ?>
 
 <!-- Reply form. -->
-<section id="reply-form" class="forum-topic-reply-form span12 alpha">
+<section id="reply-form" class="forum-topic-reply-form">
   
   <form method="POST" action="<?php echo url('?rest=forum/post'); ?>" id="<?php echo $form_id; ?>">
 
-    <fieldset class="span12 alpha">
+    <fieldset class="">
 
       <legend><?php __('forum', 'Reply'); ?></legend>
       
       <input type="hidden" name="topic_id" value="<?php echo $data->topic->id; ?>" />
       
-      <div class="span10">
+      <div class="">
         <div class="control-group">
           <textarea id="<?php echo $form_id; ?>-textarea-new-post" rows="10" class="input-block-level markdownarea" name="content" placeholder="Enter message here"></textarea>
           <div id="epiceditor"></div>
         </div>
-        <div class="control-group button-set pull-right">
+        <div class="control-group button-set">
           <!-- <button class="btn btn btn-link" id="btn-preview">Preview</button> -->
-          <input class="btn btn-inverse" name="submit" type="submit" value="<?php __('forum', 'Reply'); ?>" />
+          <input class="btn" name="submit" type="submit" value="<?php __('forum', 'Reply'); ?>" />
         </div>
       </div>
     </fieldset>
@@ -171,9 +172,10 @@ $pagination = function()use($data){
         
         var loadLastPostUrl = "<?php echo $data->pager->link_after_reply; ?>";
         
-        document.location = loadLastPostUrl+'#latest';
-        if(document.location == loadLastPostUrl || loadLastPostUrl+'#latest')
+        if(document.location == loadLastPostUrl || document.location == loadLastPostUrl+'#latest')
           document.location.reload();
+        else
+          document.location = loadLastPostUrl+'#latest';
         
       }
     });
@@ -242,11 +244,7 @@ $pagination = function()use($data){
   
   jQuery(function($){
     
-    console.log('Why?');
-    
     $('time').each(function(){
-      
-      console.log('Transcribing');
       
       var $el = $(this);
       
@@ -260,6 +258,14 @@ $pagination = function()use($data){
         .attr('title', $el.attr('datetime'));
       
     });
+    
+    if(window.Rainbow && Rainbow.color){
+      $('code').each(function(){
+        $this = $(this);
+        $this.attr('data-language', $this.attr('class'));
+      });
+      Raibow.color();
+    }
     
   });
   
