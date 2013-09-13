@@ -29,7 +29,7 @@ $form_id = 'form'.tx('Security')->random_string(10);
       </div>
       <div class="control-group button-set pull-right">
         <!-- <button class="btn btn btn-link" id="btn-preview">Preview</button> -->
-        <input class="btn btn-inverse" name="submit" type="submit" value="<?php __('forum', 'Post topic'); ?>" />
+        <input class="btn" name="submit" type="submit" value="<?php __('forum', 'Post topic'); ?>" />
       </div>
 
     </fieldset>
