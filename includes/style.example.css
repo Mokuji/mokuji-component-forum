@@ -446,3 +446,8 @@
   padding-top:10px;
   margin:0;
 }
+
+/* Unread forum or topic icon */
+.forum-unread-icon:before{
+  content:'*';
+}

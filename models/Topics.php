@@ -1,5 +1,7 @@
 <?php namespace components\forum\models; if(!defined('TX')) die('No direct access.');
 
+use \components\forum\classes\Notifications;
+
 class Topics extends \dependencies\BaseModel
 {
   
@@ -46,7 +48,27 @@ class Topics extends \dependencies\BaseModel
       ->where('topic_id', $this->id)
       ->count()->get('int') - 1;
     
+    //Skip when not logged in.
+    if(!mk('Account')->check_level(1)){
+      $unread = false;
+      $subscribed = false;
+    }
+    else{
+      $last_read = mk('Sql')->table('forum', 'TopicLastReads')
+        ->where('topic_id', $this->id)
+        ->where('user_id', mk('Account')->user->id)
+        ->execute_single()
+        ->dt_last_read->get();
+      $unread = strtotime($last_post->dt_created->get()) > strtotime($last_read);
+      $subscribed = mk('Sql')->table('forum', 'TopicSubscriptions')
+        ->where('topic_id', $this->id)
+        ->where('user_id', mk('Account')->user->id)
+        ->count()->get('int') > 0;
+    }
+    
     return array(
+      'has_unread_posts' => $unread,
+      'is_subscribed' => $subscribed,
       'last_post' => $last_post,
       'num_posts' => $num_posts,
       'num_pages' => mk('Component')->helpers('forum')->calc_pagecount($num_posts)
@@ -74,6 +96,96 @@ class Topics extends \dependencies\BaseModel
     
     //Return the result.
     return $author;
+    
+  }
+
+  public function bump_read()
+  {
+    
+    //Skip when not logged in.
+    if(!mk('Account')->check_level(1))
+      return $this;
+    
+    mk('Sql')->model('forum', 'TopicLastReads')
+      ->set(array(
+        'topic_id' => $this->id,
+        'user_id' => mk('Account')->user->id,
+        'dt_last_read' => date('Y-m-d H:i:s')
+      ))
+      ->save();
+    
+    return $this;
+    
+  }
+  
+  public function subscribe()
+  {
+    
+    //Skip when not logged in.
+    if(!mk('Account')->check_level(1))
+      return $this;
+    
+    mk('Sql')->model('forum', 'TopicSubscriptions')
+      ->set(array(
+        'topic_id' => $this->id,
+        'user_id' => mk('Account')->user->id
+      ))
+      ->save();
+    
+    return $this;
+    
+  }
+  
+  public function unsubscribe()
+  {
+    
+    //Skip when not logged in.
+    if(!mk('Account')->check_level(1))
+      return $this;
+    
+    mk('Sql')->table('forum', 'TopicSubscriptions')
+      ->pk(array(
+        'topic_id' => $this->id,
+        'user_id' => mk('Account')->user->id
+      ))
+      ->execute_single()
+      ->is('set', function($sub){
+        $sub->delete();
+      });
+    
+    return $this;
+    
+  }
+  
+  /**
+   * Sends a 'new reply' notification to all subscribers.
+   * @param  int  $exclude The reply author should be excluded from the notifications, you can enter their user ID here.
+   * @return self For chaining.
+   */
+  public function notify_subscribers($exclude=0)
+  {
+    
+    raw($exclude);
+    $topic = $this;
+    
+    mk('Sql')->table('forum', 'TopicSubscriptions')
+      ->where('topic_id', $this->id)
+      ->where('user_id', '!', intval($exclude))
+      ->execute()
+      ->each(function($sub)use($topic){
+        $extra = Data($topic->get_extra());
+        Notifications::user_notification($sub->user_id, "New reply on {$topic->title}",
+"{$extra->last_post->content}
+
+[View the reply](".url($topic->link.'&page_number='.$extra->num_pages, true).'#latest'.")
+
+[View the topic]({$topic->link})
+
+(You can unsubscribe from this topic on the topic page)"
+        );
+      });
+    
+    return $this;
     
   }
   

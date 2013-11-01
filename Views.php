@@ -291,7 +291,7 @@ class Views extends \dependencies\BaseViews
     
     //Return template data.
     return array(
-      'topic' => $topic,
+      'topic' => $topic->bump_read(),
       'starter' => $starter,
       'replies' => $replies,
       'show_starter' => ($offset == 0),

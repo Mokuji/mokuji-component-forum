@@ -54,9 +54,9 @@
   <tfoot></tfoot>
   <tbody>
     <?php foreach($data->topics as $topic): ?>
-    <tr class="forum-topic-list">
+    <tr class="forum-topic-list<?php echo $topic->extra->has_unread_posts->is_true() ? ' unread' : ''; ?>">
       <td class="forum-title">
-        <a href="<?php echo $topic->link; ?>"><?php echo $topic->title; ?></a><br />
+        <a href="<?php echo $topic->link; ?>"><span class="forum-unread-icon"></span><?php echo $topic->title; ?></a><br />
         <small>
           Started <time pubdate datetime="<?php echo $topic->dt_created; ?>"><?php echo $topic->dt_created; ?></time>,
           by <a class="lastpost-author" href="<?php echo url('?pid=63&menu=44&user='.$topic->author->account->id); ?>"><?php echo $topic->author->account->username; ?></a>

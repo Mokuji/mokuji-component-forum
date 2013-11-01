@@ -5,8 +5,34 @@ class Json extends \dependencies\BaseComponent
   
   protected $permissions = array(
     'create_post' => 1,
-    'create_topic' => 1
+    'create_topic' => 1,
+    'update_topic_subscription' => 1,
+    'delete_topic_subscription' => 1
   );
+  
+  protected function update_topic_subscription($data, $parameters)
+  {
+    mk('Sql')->table('forum', 'Topics')
+      ->pk($parameters->{0})
+      ->execute_single()
+      ->is('empty', function()use($parameters){
+        throw new \exception\NotFound('No topic with ID '.$parameters->{0});
+      })
+      ->subscribe();
+    return array('success'=>true);
+  }
+  
+  protected function delete_topic_subscription($data, $parameters)
+  {
+    mk('Sql')->table('forum', 'Topics')
+      ->pk($parameters->{0})
+      ->execute_single()
+      ->is('empty', function()use($parameters){
+        throw new \exception\NotFound('No topic with ID '.$parameters->{0});
+      })
+      ->unsubscribe();
+    return array('success'=>true);
+  }
   
   //Creates a new forum post in the given topic under the currently logged in user.
   public function create_post($data, $parameters)
@@ -26,9 +52,9 @@ class Json extends \dependencies\BaseComponent
     
     //Reference interesting variables.
     $uid = tx('Account')->user->id;
-    
+        
     //Create the model.
-    return $this->model('Posts')
+    $post = $this->model('Posts')
     
     //Merge the save-data.
     ->merge($data->having('topic_id', 'parent_id', 'content'))
@@ -38,6 +64,18 @@ class Json extends \dependencies\BaseComponent
     
     //Save to the database.
     ->save();
+    
+    //Subscribe to the topic and notify subscribers of the reply.
+    mk('Sql')->table('forum', 'Topics')
+      ->pk($data->topic_id)
+      ->execute_single()
+      ->is('set', function($topic){
+        $topic
+          ->subscribe()
+          ->notify_subscribers(mk('Account')->user->id);
+      });
+    
+    return $post;
     
   }
   
@@ -125,7 +163,8 @@ class Json extends \dependencies\BaseComponent
     $topic = $this->model('Topics')
     ->merge($data->having('forum_id', 'title'))
     ->push('user_id', $uid)
-    ->save();
+    ->save()
+    ->subscribe(); //Also subscribe to your topic.
     
     //Create and save the topic starter.
     $post = $this->model('Posts')
