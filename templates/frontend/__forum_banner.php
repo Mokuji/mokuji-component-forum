@@ -1,12 +1,12 @@
 <?php namespace components\forum; if(!defined('TX')) die('No direct access.'); ?>
 
-<li class="forum-banner depth-<?php echo $data->depth; ?>">
+<li class="forum-banner depth-<?php echo $data->depth; echo $data->extra->has_unread_posts->is_true() ? ' unread' : ''; ?>">
   
   <div class="forum-information-wrapper">
     
     <?php
       $head = 'h'.$data->depth;
-      echo "<$head class=\"forum-title\"><a href=\"{$data->link}\">{$data->title}</a></$head>";
+      echo "<$head class=\"forum-title\"><a href=\"{$data->link}\"><span class=\"forum-unread-icon\"></span>{$data->title}</a></$head>";
     ?>
     
     <p class="forum-description"><?php echo $data->description; ?></p>

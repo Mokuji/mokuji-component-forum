@@ -66,3 +66,10 @@
       text-decoration:none;
       opacity:1;
     }
+
+.forum-unread-icon{
+  display:none;
+}
+.unread .forum-unread-icon{
+  display:inline;
+}

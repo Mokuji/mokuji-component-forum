@@ -1,8 +1,7 @@
-<?php namespace components\forum; if(!defined('TX')) die('No direct access.');
+<?php namespace components\forum; if(!defined('MK')) die('No direct access.');
 
 //Make sure we have the things we need for this class.
-tx('Component')->check('update');
-tx('Component')->load('update', 'classes\\BaseDBUpdates', false);
+mk('Component')->check('update');
 
 class DBUpdates extends \components\update\classes\BaseDBUpdates
 {
@@ -10,21 +9,49 @@ class DBUpdates extends \components\update\classes\BaseDBUpdates
   protected
     $component = 'forum',
     $updates = array(
+      '0.1' => '0.0.2-alpha'
     );
+  
+  public function update_to_0_0_2_alpha($current_version, $forced)
+  {
+    
+    if($forced === true){
+      mk('Sql')->query('DROP TABLE IF EXISTS `#__forum_topic_last_reads`');
+      mk('Sql')->query('DROP TABLE IF EXISTS `#__forum_topic_subscriptions`');
+    }
+    
+    mk('Sql')->query("
+      CREATE TABLE `#__forum_topic_last_reads` (
+        `topic_id` int(10) unsigned NOT NULL,
+        `user_id` int(10) unsigned NOT NULL,
+        `dt_last_read` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (`topic_id`, `user_id`)
+      ) ENGINE=MyISAM DEFAULT CHARSET=utf8
+    ");
+    
+    mk('Sql')->query("
+      CREATE TABLE `#__forum_topic_subscriptions` (
+        `topic_id` int(10) unsigned NOT NULL,
+        `user_id` int(10) unsigned NOT NULL,
+        PRIMARY KEY (`topic_id`, `user_id`)
+      ) ENGINE=MyISAM DEFAULT CHARSET=utf8
+    ");
+    
+  }
   
   public function install_0_1($dummydata, $forced)
   {
     
     //Drop tables.
     if($forced === true){
-      tx('Sql')->query('DROP TABLE IF EXISTS `#__forum_forums`');
-      tx('Sql')->query('DROP TABLE IF EXISTS `#__forum_forums_to_pages`');
-      tx('Sql')->query('DROP TABLE IF EXISTS `#__forum_posts`');
-      tx('Sql')->query('DROP TABLE IF EXISTS `#__forum_topics`');
+      mk('Sql')->query('DROP TABLE IF EXISTS `#__forum_forums`');
+      mk('Sql')->query('DROP TABLE IF EXISTS `#__forum_forums_to_pages`');
+      mk('Sql')->query('DROP TABLE IF EXISTS `#__forum_posts`');
+      mk('Sql')->query('DROP TABLE IF EXISTS `#__forum_topics`');
     }
     
     //Create the forums table.
-    tx('Sql')->query("
+    mk('Sql')->query("
       CREATE TABLE `#__forum_forums` (
         `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
         `lft` INT(10) NOT NULL,
@@ -33,24 +60,20 @@ class DBUpdates extends \components\update\classes\BaseDBUpdates
         `description` TEXT NULL,
         `dt_created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY (`id`)
-      )
-      COLLATE='latin1_swedish_ci'
-      ENGINE=MyISAM;
+      ) ENGINE=MyISAM DEFAULT CHARSET=utf8
     ");
     
     //Create the link table.
-    tx('Sql')->query("
+    mk('Sql')->query("
       CREATE TABLE `#__forum_forums_to_pages` (
         `forum_id` INT(10) UNSIGNED NOT NULL,
         `page_id` INT(10) UNSIGNED NOT NULL,
         PRIMARY KEY (`forum_id`, `page_id`)
-      )
-      COLLATE='latin1_swedish_ci'
-      ENGINE=MyISAM;
+      ) ENGINE=MyISAM DEFAULT CHARSET=utf8
     ");
     
     //Create the posts table.
-    tx('Sql')->query("
+    mk('Sql')->query("
       CREATE TABLE `#__forum_posts` (
         `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
         `topic_id` INT(10) UNSIGNED NOT NULL,
@@ -59,13 +82,11 @@ class DBUpdates extends \components\update\classes\BaseDBUpdates
         `content` TEXT NOT NULL,
         `dt_created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY (`id`)
-      )
-      COLLATE='latin1_swedish_ci'
-      ENGINE=MyISAM;
+      ) ENGINE=MyISAM DEFAULT CHARSET=utf8
     ");
     
     //Create the topics table.
-    tx('Sql')->query("
+    mk('Sql')->query("
       CREATE TABLE `#__forum_topics` (
         `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
         `forum_id` INT(10) UNSIGNED NOT NULL,
@@ -76,16 +97,14 @@ class DBUpdates extends \components\update\classes\BaseDBUpdates
         `state` ENUM('OPEN','LOCKED','DELETED') NOT NULL DEFAULT 'OPEN',
         `dt_created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY (`id`)
-      )
-      COLLATE='latin1_swedish_ci'
-      ENGINE=MyISAM;
+      ) ENGINE=MyISAM DEFAULT CHARSET=utf8
     ");
     
     //Queue self-deployment with CMS component.
     $this->queue(array('component' => 'cms', 'min_version' => '2.0'), function($version)use($forced){
       
       #TEMP: Disabled until the feature below is released in Beta. (expected in Beta 1.2.0)
-      // tx('Component')->helpers('cms')->_call('ensure_pagetypes', array(
+      // mk('Component')->helpers('cms')->_call('ensure_pagetypes', array(
       //   array(
       //     'name' => 'forum',
       //     'title' => 'Forum component'
@@ -96,11 +115,11 @@ class DBUpdates extends \components\update\classes\BaseDBUpdates
       // ));
       
       #TEMP: The following code can be replaced by the above code.
-      $c = tx('Sql')->model('cms', 'Components')->set(array(
+      $c = mk('Sql')->model('cms', 'Components')->set(array(
         'name' => 'forum',
         'title' => 'Forum component'
       ))->save();
-      tx('Sql')->model('cms', 'ComponentViews')->set(array(
+      mk('Sql')->model('cms', 'ComponentViews')->set(array(
         'com_id' => $c->id,
         'name' => 'forum',
         'tk_title' => 'FORUM_VIEW_TITLE',

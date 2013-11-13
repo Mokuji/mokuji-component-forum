@@ -1,10 +1,10 @@
-<?php namespace components\forum; if(!defined('TX')) die('No direct access.'); ?>
-<?php echo load_plugin('jquery_timeago'); ?>
+<?php namespace components\forum; if(!defined('TX')) die('No direct access.');
 
-<?php
 
 //Load plugins.
 echo load_plugin('jquery_rest');
+echo load_plugin('jquery_timeago');
+echo load_plugin('highlight_js');
 
 //Reference user, for easy access.
 $user = &tx('Account')->user;
@@ -50,7 +50,7 @@ $pagination = function()use($data){
     <!-- #TODO: Make this button nice. -->
     <div class="topic-operations">
       
-      <?php if(tx('Account')->check_level(2)): ?>
+      <?php if(mk('Account')->check_level(2)): ?>
       
       <?php
         echo $data->target_fora
@@ -63,23 +63,34 @@ $pagination = function()use($data){
           ));
       ?>
       
-      <a data-topic-id="<?php echo $data->topic->id; ?>" class="btn-delete-topic btn">
+      <a data-topic-id="<?php echo $data->topic->id; ?>" class="btn-delete-topic btn" href="#">
         <?php __('forum', 'Delete topic'); ?>
       </a>
       <?php endif; ?>
-      
       <?php if($data->check('show_reply')): ?>
       <a data-actions="focus-reply-form scroll-reply-form" class="btn" href="#reply-form">
         <?php __('forum', 'Reply'); ?>
       </a>
       <?php endif; ?>
       
+      <?php if(mk('Account')->check_level(1)) {
+        
+        $sub = $data->topic->extra->is_subscribed->is_true();
+        
+        ?>
+          <a class="btn-unsubscribe" data-topic-id="<?php echo $data->topic->id; ?>" href="#"<?php echo $sub ? '' : ' style="display:none;"'; ?>><?php __('forum', 'Unsubscribe'); ?></a>
+          <a class="btn-subscribe" data-topic-id="<?php echo $data->topic->id; ?>" href="#"<?php echo $sub ? ' style="display:none;"' : ''; ?>><?php __('forum', 'Subscribe'); ?></a>
+        <?php
+        
+      } ?>
+      
+      
     </div>
     
   </div>
   
   <div<?php if(!$data->check('show_starter')) echo ' hidden'; ?>>
-    <?php echo tx('Component')->sections('forum')->get_html('reply', $data->starter); ?>
+    <?php echo mk('Component')->sections('forum')->get_html('reply', $data->starter); ?>
   </div>
   
 </section>
@@ -181,6 +192,24 @@ $pagination = function()use($data){
       }
     });
     
+    $('.btn-subscribe').on('click', function(e){
+      e.preventDefault();
+      $.rest('PUT', '?rest=forum/topic_subscription/'+$(this).attr('data-topic-id'))
+        .done(function(){
+          $('.btn-subscribe').hide();
+          $('.btn-unsubscribe').show();
+        });
+    });
+    
+    $('.btn-unsubscribe').on('click', function(e){
+      e.preventDefault();
+      $.rest('DELETE', '?rest=forum/topic_subscription/'+$(this).attr('data-topic-id'))
+        .done(function(){
+          $('.btn-unsubscribe').hide();
+          $('.btn-subscribe').show();
+        });
+    });
+    
   });
 
   <?php if(tx('Account')->check_level(2)): ?>
@@ -278,12 +307,16 @@ $pagination = function()use($data){
       
     });
     
-    if(window.Rainbow && Rainbow.color){
-      $('code').each(function(){
-        $this = $(this);
-        $this.attr('data-language', $this.attr('class'));
-      });
-      Raibow.color();
+    // if(window.Rainbow && Rainbow.color){
+    //   $('code').each(function(){
+    //     $this = $(this);
+    //     $this.attr('data-language', $this.attr('class'));
+    //   });
+    //   Raibow.color();
+    // }
+    
+    if(window.hljs){
+      hljs.initHighlightingOnLoad();
     }
     
   });

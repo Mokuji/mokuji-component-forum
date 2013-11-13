@@ -34,14 +34,27 @@ class Forums extends \dependencies\BaseModel
   public function get_extra()
   {
     
+    $last_post = $this
+      ->table('Posts')
+      ->join('Topics', $T)
+      ->select("$T.title", 'topic_title')
+      ->where("$T.forum_id", $this->id)
+      ->order('dt_created', 'DESC')
+      ->execute_single();
+    
+    $unread = false;
+    if(mk('Account')->check_level(1) && $last_post->is_set()){
+      $last_read = mk('Sql')->table('forum', 'TopicLastReads')
+        ->where('topic_id', $last_post->topic_id)
+        ->where('user_id', mk('Account')->user->id)
+        ->execute_single()
+        ->dt_last_read->get();
+      $unread = strtotime($last_post->dt_created->get()) > strtotime($last_read);
+    }
+    
     return array(
-      'last_post' => $this
-        ->table('Posts')
-        ->join('Topics', $T)
-        ->select("$T.title", 'topic_title')
-        ->where("$T.forum_id", $this->id)
-        ->order('dt_created', 'DESC')
-        ->execute_single(),
+      'last_post' => $last_post,
+      'has_unread_posts' => $unread,
       'num_topics' => mk('Sql')
         ->table('forum', 'Topics')
         ->where('forum_id', $this->id)

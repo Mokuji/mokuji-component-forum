@@ -2,9 +2,18 @@
 
 <?php echo load_plugin('jquery_timeago'); ?>
 
+<?php if(!$data->is_god->is_true()): ?>
+<div class="forum-banner depth-1">
+  <h1 class="forum-title"><?php echo $data->forum->title; ?></h1>
+  <p class="forum-description"><?php echo $data->forum->description; ?></p>
+</div>
+<?php endif; ?>
+
 <?php if($data->subforums->size() > 0): ?>
   
-  <h2 class="hidden">Subfora</h2>
+  <?php if(!$data->is_god->is_true()): ?>
+    <h3 class="forum-subfora">Subfora</h3>
+  <?php endif; ?>
   
   <ol class="forum-banners">
     
@@ -45,9 +54,9 @@
   <tfoot></tfoot>
   <tbody>
     <?php foreach($data->topics as $topic): ?>
-    <tr class="forum-topic-list">
+    <tr class="forum-topic-list<?php echo $topic->extra->has_unread_posts->is_true() ? ' unread' : ''; ?>">
       <td class="forum-title">
-        <a href="<?php echo $topic->link; ?>"><?php echo $topic->title; ?></a><br />
+        <a href="<?php echo $topic->link; ?>"><span class="forum-unread-icon"></span><?php echo $topic->title; ?></a><br />
         <small>
           Started <time pubdate datetime="<?php echo $topic->dt_created; ?>"><?php echo $topic->dt_created; ?></time>,
           by <a class="lastpost-author" href="<?php echo url('?pid=63&menu=44&user='.$topic->author->account->id); ?>"><?php echo $topic->author->account->username; ?></a>
