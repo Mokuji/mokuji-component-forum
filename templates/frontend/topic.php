@@ -110,6 +110,7 @@ $pagination = function()use($data){
 
       <legend><?php __('forum', 'Reply'); ?></legend>
       
+      <input type="hidden" name="id" value="" />
       <input type="hidden" name="topic_id" value="<?php echo $data->topic->id; ?>" />
       
       <div class="">
@@ -186,7 +187,7 @@ $pagination = function()use($data){
     
     //Delete topic.
     $(function(){
-      
+
       $('.btn-delete-topic').on('click', function(e){
         
         e.preventDefault();
@@ -197,6 +198,24 @@ $pagination = function()use($data){
               document.location = "<?php echo url('pid=KEEP&fid=KEEP',1); ?>";
             });
         }
+        
+      });
+      
+      //Edit post.
+      $('.btn-edit-post').on('click', function(e){
+        
+        e.preventDefault();
+        
+        //Show edit form.
+        
+
+        //Get post data and fill the form with it.
+        $.rest('GET', "<?php echo url('?rest=forum/delete_topic/', 1); ?>"+$(e.target).data('post-id'))
+          .done(function(result){
+            
+            
+
+          });
         
       });
       

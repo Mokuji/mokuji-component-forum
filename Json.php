@@ -7,6 +7,27 @@ class Json extends \dependencies\BaseComponent
     'create_post' => 1,
     'create_topic' => 1
   );
+
+  //Gets forum post data.
+  public function get_post($data, $parameters)
+  {
+    
+    #TODO: Authorise user edit permissions in the associated forum.
+    
+    //Reference interesting variables.
+    $uid = tx('Account')->user->id;
+    $pid = $parameters[0];
+    
+    //Validate them.
+    $pid->validate('Post ID', array('required', 'number'=>'int', 'gt'=>0));
+    
+    //Get the post.
+    $post = $this->table('Posts')->pk($pid)->execute_single();
+
+    //Return post.
+    return $post;
+
+  }
   
   //Creates a new forum post in the given topic under the currently logged in user.
   public function create_post($data, $parameters)
